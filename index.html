@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPP Pricer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg2: #181c27;
+    --bg3: #1e2333;
+    --border: #2a2f42;
+    --border2: #353c54;
+    --text: #e8ecf4;
+    --text2: #8892aa;
+    --text3: #555e78;
+    --accent: #4f8ef7;
+    --green: #3ecf8e;
+    --green-bg: rgba(62,207,142,0.1);
+    --amber: #f5a623;
+    --amber-bg: rgba(245,166,35,0.08);
+    --red: #f76f6f;
+    --radius: 6px;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* ── LOGIN ── */
+  #login-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--bg);
+  }
+  .login-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 48px 40px;
+    width: 340px;
+    text-align: center;
+  }
+  .login-logo {
+    font-family: var(--mono);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .login-logo span { color: var(--accent); }
+  .login-sub {
+    font-size: 12px;
+    color: var(--text3);
+    margin-bottom: 32px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .login-box input[type="password"] {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 16px;
+    letter-spacing: 0.2em;
+    padding: 12px 16px;
+    text-align: center;
+    outline: none;
+    margin-bottom: 12px;
+    transition: border-color 0.15s;
+  }
+  .login-box input[type="password"]:focus { border-color: var(--accent); }
+  .login-box button {
+    width: 100%;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius);
+    color: #fff;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 11px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .login-box button:hover { opacity: 0.88; }
+  .login-error {
+    font-size: 12px;
+    color: var(--red);
+    margin-top: 10px;
+    min-height: 16px;
+  }
+
+  /* ── APP ── */
+  #app { display: none; }
+  .top-bar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .top-logo {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .top-logo span { color: var(--accent); }
+  .top-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  .main { padding: 20px 24px; max-width: 1200px; margin: 0 auto; }
+
+  /* ── PARAMS ── */
+  .params-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 16px;
+  }
+  .params-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+  .params-row { display: grid; gap: 12px; margin-bottom: 12px; }
+  .params-row:last-child { margin-bottom: 0; }
+  .pr-3 { grid-template-columns: repeat(3,1fr); }
+  .pr-4 { grid-template-columns: repeat(4,1fr); }
+  @media(max-width:700px){
+    .pr-3,.pr-4 { grid-template-columns: 1fr 1fr; }
+  }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+  .field select, .field input {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 8px 10px;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23555e78' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 28px;
+  }
+  .field select:focus, .field input:focus { border-color: var(--accent); }
+
+  /* ── RESULTS ── */
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  @media(max-width:800px){ .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    transition: border-color 0.2s;
+  }
+  .result-card.winner { border-color: var(--green); }
+  .result-card.na { opacity: 0.35; }
+
+  .rc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .rc-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .rc-tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+  .tag-est { background: rgba(79,142,247,0.15); color: var(--accent); }
+  .tag-lat { background: rgba(245,166,35,0.15); color: var(--amber); }
+  .tag-skl { background: rgba(62,207,142,0.15); color: var(--green); }
+
+  .rc-packs {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    margin-bottom: 14px;
+  }
+
+  .rc-price {
+    font-family: var(--mono);
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+  .result-card.winner .rc-price { color: var(--green); }
+  .rc-price-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    margin-bottom: 12px;
+  }
+
+  .winner-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--green-bg);
+    color: var(--green);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+  }
+
+  .rc-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 10px 0;
+  }
+
+  .rc-cif {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  .rc-cif strong { color: var(--text2); }
+
+  .rc-breakdown { width: 100%; border-collapse: collapse; }
+  .rc-breakdown td {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    padding: 2px 0;
+    vertical-align: top;
+  }
+  .rc-breakdown td:last-child {
+    text-align: right;
+    padding-left: 8px;
+    white-space: nowrap;
+    color: var(--text2);
+  }
+  .rc-breakdown tr.total td {
+    border-top: 1px solid var(--border);
+    padding-top: 5px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .rc-na {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 8px;
+  }
+
+  /* ── VERDICT ── */
+  .verdict-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    text-align: center;
+  }
+  .verdict-main {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+  .verdict-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+  }
+  .verdict-sub .hl { color: var(--green); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">SPP<span>.</span>PRICER</div>
+    <div class="login-sub">Supplier Cost Comparison</div>
+    <input type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    <button onclick="doLogin()">Enter</button>
+    <div class="login-error" id="login-err"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="top-bar">
+    <div class="top-logo">SPP<span>.</span>PRICER</div>
+    <div class="top-meta">ESTply · Latvijas Finieris · Sklejka Multi &nbsp;|&nbsp; 1220×2440mm</div>
+  </div>
+  <div class="main">
+
+    <div class="params-card">
+      <div class="params-label">Parameters</div>
+      <div class="params-row pr-3">
+        <div class="field">
+          <label>Product family</label>
+          <select id="family">
+            <option value="birch">Birch plywood</option>
+            <option value="pine">Pine plywood (Sklejka)</option>
+            <option value="film">Film faced / Hexa / Tex</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Grade / type</label>
+          <select id="grade"></select>
+        </div>
+        <div class="field">
+          <label>Thickness (mm)</label>
+          <select id="thickness"></select>
+        </div>
+      </div>
+      <div class="params-row pr-4">
+        <div class="field">
+          <label>Packs — ESTply</label>
+          <input type="number" id="packs_est" value="1" min="1" step="1">
+        </div>
+        <div class="field">
+          <label>Packs — Latvia</label>
+          <input type="number" id="packs_lat" value="1" min="1" step="1">
+        </div>
+        <div class="field">
+          <label>Packs — Sklejka</label>
+          <input type="number" id="packs_skl" value="1" min="1" step="1">
+        </div>
+        <div class="field">
+          <label>GBP / EUR rate (£1 = €)</label>
+          <input type="number" id="gbpeur" value="1.1555" step="0.001" min="0.5" max="2.0">
+        </div>
+      </div>
+    </div>
+
+    <div class="results-grid" id="results"></div>
+    <div class="verdict-card" id="verdict"></div>
+
+  </div>
+</div>
+
+<script>
+// ── AUTH ──────────────────────────────────────────────────────────────────
+function doLogin(){
+  var v=document.getElementById('pw-input').value;
+  if(v==='0199201992'){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app').style.display='block';
+    buildGradeSelect();buildThicknessSelect();update();
+  } else {
+    document.getElementById('login-err').textContent='Incorrect password';
+    document.getElementById('pw-input').value='';
+  }
+}
+
+// ── DATA ──────────────────────────────────────────────────────────────────
+var SM2=1.22*2.44;
+var EST_PACKS={6.5:120,9:65,12:65,15:50,18:40,21:35,24:30,27:25,30:20};
+var LAT_PACKS={6.5:90,9:65,12:50,15:40,18:35,21:35,24:30,27:25,30:20};
+var SKL_FILM={9:65,12:50,15:40,18:35,21:35,24:30,27:25,30:20,35:20,40:20};
+var SKL_PINE={6:30,9:30,12:50,15:40,18:35,21:35,24:30,27:25,30:20};
+
+var ESTPLY={
+  sbb: {6.5:13.17,9:13.84,12:16.02,15:18.77,18:21.45,21:25.03,24:28.60,27:32.18,30:35.75},
+  bbbb:{6.5:10.03,9:11.49,12:14.56,15:16.92,18:19.15,21:22.35,24:25.54,27:28.73,30:31.92},
+  form:{9:12.59,12:14.57,15:17.08,18:19.52,21:22.77,24:26.02,27:29.28,30:32.53},
+  deck:{9:12.98,12:15.02,15:17.61,18:20.12,21:23.47,24:26.83,27:30.18,30:33.53}
+};
+
+var LATVIA={
+  bbbb:    {6.5:1486,9:1239,12:1069,15:1010,18:975, 21:975, 24:975, 27:975, 30:1021},
+  bbwg:    {6.5:1411,9:1177,12:1015,15:960, 18:927, 21:927, 24:927, 27:927, 30:970},
+  wgwg:    {6.5:1337,9:1115,12:962, 15:909, 18:878, 21:878, 24:878, 27:878, 30:919},
+  form:    {6.5:1569,9:1296,12:1189,15:1024,18:940, 21:940, 24:961, 27:977, 30:1040},
+  deck:    {6.5:1698,9:1397,12:1234,15:1055,18:1006,21:971, 24:948, 27:936, 30:930},
+  hbrn:   {6.5:1728,9:1381,12:1203,15:1104,18:1045,21:1051,24:1033,27:1007,30:1006},
+  hblk:   {6.5:1863,9:1445,12:1278,15:1136,18:1109,21:1077,24:1058,27:1028,30:1023},
+  hslv:   {6.5:2593,9:2059,12:1655,15:1385,18:1317,21:1257,24:1216,27:1166,30:1149}
+};
+
+var SKLEJKA={
+  pi2: {6:1530,9:1335,12:1230,15:1120,18:1120,21:1120,24:1120,27:1130,30:1150},
+  pii2:{6:1445,9:1260,12:1160,15:1060,18:1060,21:1060,24:1060,27:1070,30:1085},
+  film:{9:1470,12:1250,15:1095,18:1040,21:1040,24:1050,27:1060,30:1070,35:1100,40:1130},
+  wire:{9:1470,12:1250,15:1095,18:1040,21:1040,24:1050,27:1060,30:1070,35:1100,40:1130},
+  hbrn:{9:1680,12:1430,15:1290,18:1270,21:1270,24:1280,27:1290,30:1300}
+};
+
+var FAM={
+  birch:{
+    thk:[6.5,9,12,15,18,21,24,27,30],
+    grades:{
+      bbbb:{l:'BB/BB',           n:'',                                        ek:'bbbb',lk:'bbbb',sk:null,    st:null,  sm:1},
+      sbb: {l:'S/BB',            n:'ESTply only',                             ek:'sbb', lk:null,  sk:null,    st:null,  sm:1},
+      bbwg:{l:'BB/WG',           n:'Latvia only',                             ek:null,  lk:'bbwg',sk:null,    st:null,  sm:1},
+      wgwg:{l:'WG/WG',           n:'Latvia only',                             ek:null,  lk:'wgwg',sk:null,    st:null,  sm:1}
+    }
+  },
+  pine:{
+    thk:[6,9,12,15,18,21,24,27,30],
+    grades:{
+      pi2: {l:'Pine I/II',       n:'Sklejka only',                            ek:null,  lk:null,  sk:'pi2',   st:'pine',sm:1},
+      pii2:{l:'Pine II/II',      n:'Sklejka only',                            ek:null,  lk:null,  sk:'pii2',  st:'pine',sm:1}
+    }
+  },
+  film:{
+    thk:[6.5,9,12,15,18,21,24,27,30,35,40],
+    grades:{
+      fgrp:{l:'Form / RigaForm / Film-Film',  n:'ESTply Form \xB7 Latvia RigaForm \xB7 Sklejka Film/Film', ek:'form',lk:'form',sk:'film',st:'film',sm:1},
+      tgrp:{l:'Tex / Wiremesh / Deck',        n:'ESTply Deck \xB7 Latvia RigaTex \xB7 Sklejka Wiremesh',  ek:'deck',lk:'deck',sk:'wire',st:'film',sm:1},
+      hbrn:{l:'Hexa \u2014 Brown',            n:'Latvia Heksa Plus \xB7 Sklejka HEXA/Film Brown',         ek:null,  lk:'hbrn',sk:'hbrn',st:'film',sm:1},
+      hblk:{l:'Hexa \u2014 Black',            n:'Latvia Heksa Plus \xB7 Sklejka HEXA/Film Black (+2%)',   ek:null,  lk:'hblk',sk:'hbrn',st:'film',sm:1.02},
+      hslv:{l:'Hexa \u2014 Silver Grey',      n:'Latvia Heksa Plus only',                                 ek:null,  lk:'hslv',sk:null,  st:null,  sm:1}
+    }
+  }
+};
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function m3(t){return (t/1000)*SM2;}
+function G(v){return '\xA3'+v.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function E(v){return '\u20AC'+v.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function packs(sup,gc,t){
+  if(sup==='e') return EST_PACKS[t]||null;
+  if(sup==='l') return LAT_PACKS[t]||null;
+  return (gc.st==='pine'?SKL_PINE:SKL_FILM)[t]||null;
+}
+
+var CF=6.5,RPP=7,SC=4.43;
+
+function calcE(t,gc,n,r){
+  if(!gc.ek) return null;
+  var pm2=(ESTPLY[gc.ek]||{})[t]; if(pm2==null) return null;
+  var s=packs('e',gc,t); if(!s) return null;
+  var sh=n*s,m3v=sh*m3(t),m2v=sh*SM2;
+  var ce=pm2*m2v,cg=ce/r,cc=CF*m3v,rc=n*RPP,tot=cg+cc+rc;
+  return{lbl:'ESTply',tag:'est',s:s,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:(pm2*SM2)/r,
+    cl:E(pm2)+'/m\xB2 \u2192 '+G(pm2/r)+'/m\xB2',
+    rows:[['CIF ('+E(ce)+' \xF7 '+r.toFixed(4)+')',G(cg)],
+          ['Customs+collection (\xA3'+CF.toFixed(2)+'/m\xB3 \xD7 '+m3v.toFixed(3)+'m\xB3)',G(cc)],
+          ['Receiving ('+n+' \xD7 \xA3'+RPP+')',G(rc)]]};
+}
+
+function calcL(t,gc,n){
+  if(!gc.lk) return null;
+  var pm3=(LATVIA[gc.lk]||{})[t]; if(pm3==null) return null;
+  var s=packs('l',gc,t); if(!s) return null;
+  var sh=n*s,m3v=sh*m3(t);
+  var base=pm3*m3v,tr=8*m3v,sub=base+tr,sur=sub*(SC/100),cif=sub+sur;
+  var cc=CF*m3v,rc=n*RPP,tot=cif+cc+rc;
+  return{lbl:'Latvijas Finieris',tag:'lat',s:s,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:cif/sh,
+    cl:G(pm3)+'/m\xB3 base \u2192 '+G((pm3+8)*(1+SC/100))+'/m\xB3 inc. surcharge',
+    rows:[['CIF base ('+G(pm3)+'/m\xB3)',G(base)],
+          ['Transport (\xA38/m\xB3)',G(tr)],
+          ['Surcharge ('+SC+'%)',G(sur)],
+          ['Customs+collection (\xA3'+CF.toFixed(2)+'/m\xB3 \xD7 '+m3v.toFixed(3)+'m\xB3)',G(cc)],
+          ['Receiving ('+n+' \xD7 \xA3'+RPP+')',G(rc)]]};
+}
+
+function calcS(t,gc,n,r){
+  if(!gc.sk) return null;
+  var raw=(SKLEJKA[gc.sk]||{})[t]; if(raw==null) return null;
+  var pm3=raw*(gc.sm||1);
+  var s=packs('s',gc,t); if(!s) return null;
+  var sh=n*s,m3v=sh*m3(t);
+  var ce=pm3*m3v,cg=ce/r,cc=50,rc=n*RPP,tot=cg+cc+rc;
+  var mn=gc.sm>1?' (+'+Math.round((gc.sm-1)*100)+'% black)':'';
+  return{lbl:'Sklejka Multi',tag:'skl',s:s,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:cg/sh,
+    cl:E(pm3)+'/m\xB3'+mn+' \u2192 '+G(pm3/r)+'/m\xB3',
+    rows:[['CIF ('+E(ce)+' \xF7 '+r.toFixed(4)+')',G(cg)],
+          ['Customs (\xA350 flat)',G(cc)],
+          ['Receiving ('+n+' \xD7 \xA3'+RPP+')',G(rc)]]};
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────
+function card(res,n,win){
+  if(!res){
+    return '<div class="result-card na">'
+      +'<div class="rc-price" style="font-size:20px;color:var(--text3);">N/A</div>'
+      +'<div class="rc-price-sub">Not available</div>'
+      +'<hr class="rc-divider"><div class="rc-na">This supplier does not offer this grade</div>'
+      +'</div>';
+  }
+  var rows=res.rows.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>';}).join('');
+  return '<div class="result-card'+(win?' winner':'')+'">'
+    +'<div class="rc-header"><span class="rc-name">'+res.lbl+'</span><span class="rc-tag tag-'+res.tag+'">'+res.tag.toUpperCase()+'</span></div>'
+    +'<div class="rc-packs">'+res.s+' sheets/pack &nbsp;\xB7&nbsp; '+n+' pack'+(n>1?'s':'')+' = '+res.sh+' sheets</div>'
+    +'<div class="rc-price">'+G(res.psl)+'</div>'
+    +'<div class="rc-price-sub">per sheet landed &nbsp;\xB7&nbsp; CIF only: '+G(res.pcif)+'/sheet</div>'
+    +(win?'<div class="winner-pill">\u2713 Cheapest per sheet</div>':'')
+    +'<hr class="rc-divider">'
+    +'<div class="rc-cif">'+res.cl+'</div>'
+    +'<table class="rc-breakdown">'+rows
+    +'<tr class="total"><td>Order total &nbsp;\xB7&nbsp; '+res.sh+' sheets &nbsp;\xB7&nbsp; '+res.m3.toFixed(3)+'m\xB3</td><td>'+G(res.tot)+'</td></tr>'
+    +'</table></div>';
+}
+
+var curFam='birch';
+function buildGradeSelect(){
+  var gs=document.getElementById('grade'); gs.innerHTML='';
+  Object.keys(FAM[curFam].grades).forEach(function(k){
+    var g=FAM[curFam].grades[k],o=document.createElement('option');
+    o.value=k; o.textContent=g.l+(g.n?' \u2014 '+g.n:''); gs.appendChild(o);
+  });
+}
+function buildThicknessSelect(){
+  var ts=document.getElementById('thickness'),cur=parseFloat(ts.value); ts.innerHTML='';
+  FAM[curFam].thk.forEach(function(t){
+    var o=document.createElement('option'); o.value=t; o.textContent=t+'mm';
+    if(t===cur) o.selected=true; ts.appendChild(o);
+  });
+}
+
+function update(){
+  var fam=document.getElementById('family').value;
+  var gk=document.getElementById('grade').value;
+  var t=parseFloat(document.getElementById('thickness').value);
+  var r=parseFloat(document.getElementById('gbpeur').value)||1.1555;
+  var pe=parseInt(document.getElementById('packs_est').value)||1;
+  var pl=parseInt(document.getElementById('packs_lat').value)||1;
+  var ps=parseInt(document.getElementById('packs_skl').value)||1;
+  curFam=fam;
+  var gc=FAM[fam].grades[gk]; if(!gc) return;
+
+  var eR=calcE(t,gc,pe,r),lR=calcL(t,gc,pl),sR=calcS(t,gc,ps,r);
+  var av=[{r:eR,n:pe},{r:lR,n:pl},{r:sR,n:ps}].filter(function(x){return x.r!==null;});
+  var wp=av.length?Math.min.apply(null,av.map(function(x){return x.r.psl;})):null;
+
+  document.getElementById('results').innerHTML=
+    [{r:eR,n:pe},{r:lR,n:pl},{r:sR,n:ps}].map(function(x){
+      var w=x.r&&av.length>1&&Math.abs(x.r.psl-wp)<0.005;
+      return card(x.r,x.n,w);
+    }).join('');
+
+  var vd=document.getElementById('verdict');
+  if(!av.length){
+    vd.innerHTML='<div class="verdict-main" style="color:var(--text3)">No data for this combination</div>';
+  } else if(av.length===1){
+    vd.innerHTML='<div class="verdict-main">'+av[0].r.lbl+' only</div>'
+      +'<div class="verdict-sub">'+G(av[0].r.psl)+' per sheet landed</div>';
+  } else {
+    var win=av.reduce(function(a,b){return a.r.psl<=b.r.psl?a:b;});
+    var nxt=av.filter(function(x){return x!==win;}).reduce(function(a,b){return a.r.psl<=b.r.psl?a:b;});
+    var sv=nxt.r.psl-win.r.psl,pct=(sv/nxt.r.psl*100).toFixed(1);
+    vd.innerHTML='<div class="verdict-main">'+win.r.lbl+' is cheapest per sheet</div>'
+      +'<div class="verdict-sub">Saving <span class="hl">'+G(sv)+'/sheet</span> &nbsp;\xB7&nbsp; '+pct+'% vs next cheapest &nbsp;\xB7&nbsp; adjust packs to compare equal volumes</div>';
+  }
+}
+
+document.getElementById('family').addEventListener('change',function(){
+  curFam=this.value; buildGradeSelect(); buildThicknessSelect(); update();
+});
+document.getElementById('grade').addEventListener('change',update);
+document.getElementById('thickness').addEventListener('change',update);
+['gbpeur','packs_est','packs_lat','packs_skl'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',update);
+  document.getElementById(id).addEventListener('change',update);
+});
+</script>
+</body>
+</html>
