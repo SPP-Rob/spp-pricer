@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SPP Pricer</title>
-
-
 <style>
 :root {
   --green:       #0e7d3c;
@@ -21,397 +19,94 @@
   --text2:       #4a5568;
   --text3:       #8a96a8;
   --red:         #c0392b;
-  --amber:       #d97706;
   --radius:      8px;
   --shadow:      0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md:   0 4px 12px rgba(0,0,0,0.10);
   --sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --mono: 'Courier New', monospace;
+  --mono: ui-monospace, 'Courier New', monospace;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  font-size: 14px;
-  min-height: 100vh;
-}
+body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; min-height: 100vh; }
 
-/* ── LOGIN ────────────────────────────────────────────── */
-#login-screen {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: linear-gradient(145deg, #0e7d3c 0%, #0a6130 60%, #085228 100%);
-}
-.login-box {
-  background: var(--surface);
-  border-radius: 14px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-  padding: 48px 44px;
-  width: 360px;
-  text-align: center;
-}
-.login-mark {
-  width: 52px;
-  height: 52px;
-  background: var(--green);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 18px;
-  font-family: var(--mono);
-  font-size: 18px;
-  font-weight: 500;
-  color: #fff;
-  letter-spacing: -1px;
-}
-.login-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 4px;
-}
-.login-sub {
-  font-size: 13px;
-  color: var(--text3);
-  margin-bottom: 32px;
-}
-.login-box input[type="password"] {
-  width: 100%;
-  background: var(--surface2);
-  border: 1.5px solid var(--border2);
-  border-radius: var(--radius);
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 18px;
-  letter-spacing: 0.25em;
-  padding: 12px 16px;
-  text-align: center;
-  outline: none;
-  margin-bottom: 12px;
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-.login-box input[type="password"]:focus {
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px rgba(14,125,60,0.12);
-}
-.login-btn {
-  width: 100%;
-  background: var(--green);
-  border: none;
-  border-radius: var(--radius);
-  color: #fff;
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 600;
-  padding: 12px;
-  cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
-  letter-spacing: 0.01em;
-}
-.login-btn:hover { background: var(--green-dark); }
-.login-btn:active { transform: scale(0.99); }
-.login-error {
-  font-size: 12px;
-  color: var(--red);
-  margin-top: 10px;
-  min-height: 16px;
-}
+/* LOGIN */
+#login-screen { display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(145deg,#0e7d3c 0%,#0a6130 60%,#085228 100%); }
+.login-box { background:var(--surface); border-radius:14px; box-shadow:0 20px 60px rgba(0,0,0,0.25); padding:48px 44px; width:360px; text-align:center; }
+.login-mark { width:52px; height:52px; background:var(--green); border-radius:12px; display:flex; align-items:center; justify-content:center; margin:0 auto 18px; font-size:14px; font-weight:700; color:#fff; letter-spacing:-0.5px; }
+.login-title { font-size:20px; font-weight:600; color:var(--text); margin-bottom:4px; }
+.login-sub { font-size:13px; color:var(--text3); margin-bottom:32px; }
+.login-box input[type="password"] { width:100%; background:var(--surface2); border:1.5px solid var(--border2); border-radius:var(--radius); color:var(--text); font-size:18px; letter-spacing:0.25em; padding:12px 16px; text-align:center; outline:none; margin-bottom:12px; transition:border-color 0.15s,box-shadow 0.15s; }
+.login-box input[type="password"]:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(14,125,60,0.12); }
+.login-btn { width:100%; background:var(--green); border:none; border-radius:var(--radius); color:#fff; font-size:14px; font-weight:600; padding:12px; cursor:pointer; transition:background 0.15s; }
+.login-btn:hover { background:var(--green-dark); }
+.login-error { font-size:12px; color:var(--red); margin-top:10px; min-height:16px; }
 
-/* ── APP ──────────────────────────────────────────────── */
-#app { display: none; }
+/* APP */
+#app { display:none; }
+.top-bar { background:var(--green); padding:0 28px; display:flex; align-items:center; justify-content:space-between; height:54px; box-shadow:0 2px 8px rgba(0,0,0,0.15); }
+.top-logo { display:flex; align-items:center; gap:10px; }
+.top-logo-mark { background:rgba(255,255,255,0.2); border-radius:6px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; letter-spacing:-0.5px; }
+.top-logo-text { font-size:15px; font-weight:600; color:#fff; letter-spacing:-0.2px; }
+.top-logo-text span { font-weight:400; opacity:0.75; font-size:13px; margin-left:6px; }
+.top-meta { font-size:11px; color:rgba(255,255,255,0.6); }
 
-.top-bar {
-  background: var(--green);
-  padding: 0 28px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 54px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-.top-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.top-logo-mark {
-  background: rgba(255,255,255,0.2);
-  border-radius: 6px;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  color: #fff;
-  letter-spacing: -0.5px;
-}
-.top-logo-text {
-  font-size: 15px;
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: -0.2px;
-}
-.top-logo-text span {
-  font-weight: 400;
-  opacity: 0.75;
-  font-size: 13px;
-  margin-left: 6px;
-}
-.top-meta {
-  font-size: 11px;
-  color: rgba(255,255,255,0.6);
-  font-family: var(--mono);
-}
+.main { padding:20px 24px 32px; max-width:1180px; margin:0 auto; }
 
-/* ── MAIN ─────────────────────────────────────────────── */
-.main {
-  padding: 20px 24px 32px;
-  max-width: 1180px;
-  margin: 0 auto;
-}
+/* PARAMS */
+.params-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:20px 22px; margin-bottom:16px; }
+.section-label { font-size:10px; font-weight:600; color:var(--green); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:14px; }
+.params-row { display:grid; gap:12px; margin-bottom:12px; }
+.params-row:last-child { margin-bottom:0; }
+.pr-3 { grid-template-columns:repeat(3,1fr); }
+.pr-5 { grid-template-columns:repeat(5,1fr); }
+@media(max-width:700px){ .pr-3,.pr-5{ grid-template-columns:1fr 1fr; } }
+.field { display:flex; flex-direction:column; gap:5px; }
+.field label { font-size:11px; font-weight:500; color:var(--text2); }
+.field select,.field input { background:var(--surface); border:1.5px solid var(--border2); border-radius:6px; color:var(--text); font-family:var(--sans); font-size:13px; padding:8px 10px; outline:none; width:100%; transition:border-color 0.15s,box-shadow 0.15s; appearance:none; -webkit-appearance:none; }
+.field select { background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238a96a8' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; padding-right:28px; }
+.field select:focus,.field input:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(14,125,60,0.1); }
 
-/* ── PARAMS ───────────────────────────────────────────── */
-.params-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 20px 22px;
-  margin-bottom: 16px;
-}
-.section-label {
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--green);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 14px;
-}
-.params-row {
-  display: grid;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-.params-row:last-child { margin-bottom: 0; }
-.pr-3 { grid-template-columns: repeat(3,1fr); }
-.pr-4 { grid-template-columns: repeat(4,1fr); }
-@media(max-width:680px){
-  .pr-3,.pr-4 { grid-template-columns: 1fr 1fr; }
-}
+/* SIZE TOGGLE */
+.size-toggle { display:inline-flex; background:var(--surface2); border:1.5px solid var(--border2); border-radius:6px; overflow:hidden; }
+.size-toggle button { background:none; border:none; padding:7px 14px; font-size:12px; font-weight:500; color:var(--text3); cursor:pointer; transition:background 0.15s,color 0.15s; font-family:var(--sans); }
+.size-toggle button.active { background:var(--green); color:#fff; }
+.size-toggle-wrap { display:flex; flex-direction:column; gap:5px; }
+.size-toggle-wrap label { font-size:11px; font-weight:500; color:var(--text2); }
 
-.field { display: flex; flex-direction: column; gap: 5px; }
-.field label {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text2);
-}
-.field select, .field input {
-  background: var(--surface);
-  border: 1.5px solid var(--border2);
-  border-radius: 6px;
-  color: var(--text);
-  font-family: var(--sans);
-  font-size: 13px;
-  padding: 8px 10px;
-  outline: none;
-  width: 100%;
-  transition: border-color 0.15s, box-shadow 0.15s;
-  appearance: none;
-  -webkit-appearance: none;
-}
-.field select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238a96a8' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 28px;
-}
-.field select:focus, .field input:focus {
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px rgba(14,125,60,0.1);
-}
+/* RESULTS */
+.results-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:14px; }
+@media(max-width:800px){ .results-grid{ grid-template-columns:1fr; } }
+.result-card { background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; transition:border-color 0.2s,box-shadow 0.2s; }
+.result-card.winner { border-color:var(--green); box-shadow:0 0 0 3px rgba(14,125,60,0.1),var(--shadow); }
+.result-card.na { background:var(--surface2); opacity:0.6; }
+.rc-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:3px; }
+.rc-name { font-size:13px; font-weight:600; color:var(--text); }
+.rc-tag { font-size:9px; font-weight:600; padding:2px 7px; border-radius:20px; text-transform:uppercase; letter-spacing:0.06em; }
+.tag-est { background:#dbeafe; color:#1d4ed8; }
+.tag-lat { background:#fef3c7; color:#92400e; }
+.tag-skl { background:var(--green-light); color:var(--green-dark); }
+.rc-packs { font-size:11px; color:var(--text3); margin-bottom:16px; font-family:var(--mono); }
+.rc-price { font-family:var(--mono); font-size:34px; font-weight:500; color:var(--text); line-height:1; margin-bottom:3px; letter-spacing:-1px; }
+.result-card.winner .rc-price { color:var(--green); }
+.rc-price-sub { font-size:11px; color:var(--text3); margin-bottom:14px; font-family:var(--mono); }
+.winner-pill { display:inline-flex; align-items:center; gap:5px; background:var(--green-light); color:var(--green); border:1px solid var(--green-mid); font-size:10px; font-weight:600; padding:3px 10px; border-radius:20px; margin-bottom:14px; }
+.rc-divider { border:none; border-top:1px solid var(--border); margin:12px 0; }
+.rc-cif { font-family:var(--mono); font-size:10px; color:var(--text3); margin-bottom:10px; line-height:1.6; background:var(--surface2); border-radius:5px; padding:6px 8px; }
+.rc-cif strong { color:var(--text2); }
+.rc-breakdown { width:100%; border-collapse:collapse; }
+.rc-breakdown td { font-family:var(--mono); font-size:10px; color:var(--text3); padding:2.5px 0; vertical-align:top; }
+.rc-breakdown td:last-child { text-align:right; padding-left:8px; white-space:nowrap; color:var(--text2); }
+.rc-breakdown tr.total td { border-top:1px solid var(--border); padding-top:6px; color:var(--text); font-weight:500; font-size:11px; }
+.rc-na { font-size:12px; color:var(--text3); margin-top:10px; font-style:italic; }
 
-/* ── RESULTS GRID ─────────────────────────────────────── */
-.results-grid {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 14px;
-  margin-bottom: 14px;
-}
-@media(max-width:800px){ .results-grid { grid-template-columns: 1fr; } }
-
-.result-card {
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 18px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.result-card.winner {
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px rgba(14,125,60,0.1), var(--shadow);
-}
-.result-card.na {
-  background: var(--surface2);
-  opacity: 0.6;
-}
-
-.rc-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 3px;
-}
-.rc-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-}
-.rc-tag {
-  font-family: var(--mono);
-  font-size: 9px;
-  font-weight: 500;
-  padding: 2px 7px;
-  border-radius: 20px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.tag-est { background: #dbeafe; color: #1d4ed8; }
-.tag-lat { background: #fef3c7; color: #92400e; }
-.tag-skl { background: var(--green-light); color: var(--green-dark); }
-
-.rc-packs {
-  font-size: 11px;
-  color: var(--text3);
-  margin-bottom: 16px;
-  font-family: var(--mono);
-}
-
-.rc-price {
-  font-family: var(--mono);
-  font-size: 36px;
-  font-weight: 500;
-  color: var(--text);
-  line-height: 1;
-  margin-bottom: 3px;
-  letter-spacing: -1px;
-}
-.result-card.winner .rc-price { color: var(--green); }
-
-.rc-price-sub {
-  font-size: 11px;
-  color: var(--text3);
-  margin-bottom: 14px;
-  font-family: var(--mono);
-}
-
-.winner-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: var(--green-light);
-  color: var(--green);
-  border: 1px solid var(--green-mid);
-  font-size: 10px;
-  font-weight: 600;
-  padding: 3px 10px;
-  border-radius: 20px;
-  margin-bottom: 14px;
-  letter-spacing: 0.03em;
-}
-
-.rc-divider {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 12px 0;
-}
-
-.rc-cif {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--text3);
-  margin-bottom: 10px;
-  line-height: 1.6;
-  background: var(--surface2);
-  border-radius: 5px;
-  padding: 6px 8px;
-}
-.rc-cif strong { color: var(--text2); }
-
-.rc-breakdown { width: 100%; border-collapse: collapse; }
-.rc-breakdown td {
-  font-family: var(--mono);
-  font-size: 10px;
-  color: var(--text3);
-  padding: 2.5px 0;
-  vertical-align: top;
-}
-.rc-breakdown td:last-child {
-  text-align: right;
-  padding-left: 8px;
-  white-space: nowrap;
-  color: var(--text2);
-}
-.rc-breakdown tr.total td {
-  border-top: 1px solid var(--border);
-  padding-top: 6px;
-  margin-top: 2px;
-  color: var(--text);
-  font-weight: 500;
-  font-size: 11px;
-}
-.rc-na {
-  font-size: 12px;
-  color: var(--text3);
-  margin-top: 10px;
-  font-style: italic;
-}
-
-/* ── VERDICT ──────────────────────────────────────────── */
-.verdict-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  text-align: center;
-  flex-wrap: wrap;
-}
-.verdict-main {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-}
-.verdict-sub {
-  font-size: 12px;
-  color: var(--text3);
-  font-family: var(--mono);
-}
-.verdict-sub .hl {
-  color: var(--green);
-  font-weight: 500;
-}
-.verdict-sep {
-  color: var(--border2);
-  font-size: 18px;
-  line-height: 1;
-}
+/* VERDICT */
+.verdict-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:14px 20px; display:flex; align-items:center; justify-content:center; gap:8px; text-align:center; flex-wrap:wrap; }
+.verdict-main { font-size:14px; font-weight:600; color:var(--text); }
+.verdict-sub { font-size:12px; color:var(--text3); font-family:var(--mono); }
+.verdict-sub .hl { color:var(--green); font-weight:500; }
+.verdict-sep { color:var(--border2); font-size:18px; line-height:1; }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
     <div class="login-mark">SPP</div>
@@ -423,20 +118,18 @@ body {
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
   <div class="top-bar">
     <div class="top-logo">
       <div class="top-logo-mark">SPP</div>
       <div class="top-logo-text">SPP Pricer <span>Supplier Cost Comparison</span></div>
     </div>
-    <div class="top-meta">ESTply &nbsp;·&nbsp; Latvijas Finieris &nbsp;·&nbsp; Sklejka Multi &nbsp;|&nbsp; 1220×2440mm</div>
+    <div class="top-meta">ESTply &nbsp;·&nbsp; Latvijas Finieris &nbsp;·&nbsp; Sklejka Multi</div>
   </div>
-
   <div class="main">
     <div class="params-card">
       <div class="section-label">Parameters</div>
-      <div class="params-row pr-3">
+      <div class="params-row pr-3" style="margin-bottom:12px;">
         <div class="field">
           <label>Product family</label>
           <select id="family">
@@ -454,7 +147,14 @@ body {
           <select id="thickness"></select>
         </div>
       </div>
-      <div class="params-row pr-4">
+      <div class="params-row pr-5">
+        <div class="size-toggle-wrap">
+          <label>Sheet size</label>
+          <div class="size-toggle">
+            <button id="btn-sm" class="active" onclick="setSize('sm')">1220×2440</button>
+            <button id="btn-lg" onclick="setSize('lg')">1525×3050</button>
+          </div>
+        </div>
         <div class="field">
           <label>Packs — ESTply</label>
           <input type="number" id="packs_est" value="1" min="1" step="1">
@@ -473,7 +173,6 @@ body {
         </div>
       </div>
     </div>
-
     <div class="results-grid" id="results"></div>
     <div class="verdict-card" id="verdict"></div>
   </div>
@@ -492,28 +191,68 @@ function doLogin(){
   }
 }
 
-var SM2=1.22*2.44;
-var EST_PACKS={6.5:120,9:65,12:65,15:50,18:40,21:35,24:30,27:25,30:20};
-var LAT_PACKS={6.5:90,9:65,12:50,15:40,18:35,21:35,24:30,27:25,30:20};
-var SKL_FILM={9:65,12:50,15:40,18:35,21:35,24:30,27:25,30:20,35:20,40:20};
-var SKL_PINE={6:30,9:30,12:50,15:40,18:35,21:35,24:30,27:25,30:20};
+// ── SHEET AREAS ────────────────────────────────────────────────────────────
+var SIZES={sm:{w:1.22,h:2.44},lg:{w:1.525,h:3.05}};
+var curSize='sm';
+function sheetM2(){var s=SIZES[curSize];return s.w*s.h;}
+function setSize(sz){
+  curSize=sz;
+  document.getElementById('btn-sm').className=sz==='sm'?'active':'';
+  document.getElementById('btn-lg').className=sz==='lg'?'active':'';
+  update();
+}
 
+// ── PACK SIZES ─────────────────────────────────────────────────────────────
+// 1220x2440
+var EST_SM={6.5:120,9:65,12:65,15:50,18:40,21:35,24:30,27:25,30:20};
+var LAT_SM={6.5:90, 9:65,12:50,15:40,18:35,21:35,24:30,27:25,30:20};
+var SKL_FILM_SM={9:65,12:50,15:40,18:35,21:35,24:30,27:25,30:20,35:20,40:20};
+var SKL_PINE_SM={6:30,9:30,12:50,15:40,18:35,21:35,24:30,27:25,30:20};
+// 1525x3050 — manual input (no confirmed pack sizes)
+var EST_LG={};var LAT_LG={};
+
+// ── ESTPLY PRICES (EUR/m²) ─────────────────────────────────────────────────
 var ESTPLY={
-  sbb: {6.5:13.17,9:13.84,12:16.02,15:18.77,18:21.45,21:25.03,24:28.60,27:32.18,30:35.75},
-  bbbb:{6.5:10.03,9:11.49,12:14.56,15:16.92,18:19.15,21:22.35,24:25.54,27:28.73,30:31.92},
-  form:{9:12.59,12:14.57,15:17.08,18:19.52,21:22.77,24:26.02,27:29.28,30:32.53},
-  deck:{9:12.98,12:15.02,15:17.61,18:20.12,21:23.47,24:26.83,27:30.18,30:33.53}
+  sm:{
+    sbb: {6.5:13.17,9:13.84,12:16.02,15:18.77,18:21.45,21:25.03,24:28.60,27:32.18,30:35.75},
+    bbbb:{6.5:10.03,9:11.49,12:14.56,15:16.92,18:19.15,21:22.35,24:25.54,27:28.73,30:31.92},
+    form:{9:12.59,12:14.57,15:17.08,18:19.52,21:22.77,24:26.02,27:29.28,30:32.53},
+    deck:{9:12.98,12:15.02,15:17.61,18:20.12,21:23.47,24:26.83,27:30.18,30:33.53}
+  },
+  lg:{
+    sbb: {6.5:14.01,9:14.72,12:17.04,15:19.97,18:22.82,21:26.62,24:30.43,27:34.23,30:38.04},
+    bbbb:{6.5:10.67,9:12.23,12:15.49,15:18.00,18:20.38,21:23.77,24:27.17,27:30.56,30:33.96},
+    form:{6.5:13.31,9:13.99,12:16.19,15:18.97,18:21.69,21:25.30,24:28.91,27:32.53,30:36.14},
+    deck:{9:14.42,12:16.69,15:19.56,18:22.36,21:26.08,24:29.81,27:33.53,30:37.26}
+  }
 };
+
+// ── LATVIA PRICES (GBP/m³) ────────────────────────────────────────────────
+// 1220x2440: Q1 2025 | 1525x3050: Q3 2025
 var LATVIA={
-  bbbb:    {6.5:1486,9:1239,12:1069,15:1010,18:975, 21:975, 24:975, 27:975, 30:1021},
-  bbwg:    {6.5:1411,9:1177,12:1015,15:960, 18:927, 21:927, 24:927, 27:927, 30:970},
-  wgwg:    {6.5:1337,9:1115,12:962, 15:909, 18:878, 21:878, 24:878, 27:878, 30:919},
-  form:    {6.5:1569,9:1296,12:1189,15:1024,18:940, 21:940, 24:961, 27:977, 30:1040},
-  deck:    {6.5:1698,9:1397,12:1234,15:1055,18:1006,21:971, 24:948, 27:936, 30:930},
-  hbrn:    {6.5:1728,9:1381,12:1203,15:1104,18:1045,21:1051,24:1033,27:1007,30:1006},
-  hblk:    {6.5:1863,9:1445,12:1278,15:1136,18:1109,21:1077,24:1058,27:1028,30:1023},
-  hslv:    {6.5:2593,9:2059,12:1655,15:1385,18:1317,21:1257,24:1216,27:1166,30:1149}
+  sm:{
+    bbbb:{6.5:1486,9:1239,12:1069,15:1010,18:975, 21:975, 24:975, 27:975, 30:1021},
+    bbwg:{6.5:1411,9:1177,12:1015,15:960, 18:927, 21:927, 24:927, 27:927, 30:970},
+    wgwg:{6.5:1337,9:1115,12:962, 15:909, 18:878, 21:878, 24:878, 27:878, 30:919},
+    form:{6.5:1569,9:1296,12:1189,15:1024,18:940, 21:940, 24:961, 27:977, 30:1040},
+    deck:{6.5:1698,9:1397,12:1234,15:1055,18:1006,21:971, 24:948, 27:936, 30:930},
+    hbrn:{6.5:1728,9:1381,12:1203,15:1104,18:1045,21:1051,24:1033,27:1007,30:1006},
+    hblk:{6.5:1863,9:1445,12:1278,15:1136,18:1109,21:1077,24:1058,27:1028,30:1023},
+    hslv:{6.5:2593,9:2059,12:1655,15:1385,18:1317,21:1257,24:1216,27:1166,30:1149}
+  },
+  lg:{
+    bbbb:{6.5:1811,9:1425,12:1229,15:1162,18:1122,21:1122,24:1122,27:1122,30:1174},
+    bbwg:{6.5:1720,9:1354,12:1168,15:1104,18:1066,21:1066,24:1066,27:1066,30:1115},
+    wgwg:{6.5:1665,9:1282,12:1106,15:1045,18:1010,21:1010,24:1010,27:1010,30:1056},
+    form:{6.5:1630,9:1490,12:1367,15:1177,18:1081,21:1081,24:1105,27:1123,30:1195},
+    deck:{6.5:1953,9:1606,12:1419,15:1214,18:1157,21:1117,24:1090,27:1076,30:1070},
+    hbrn:{6.5:1987,9:1588,12:1383,15:1270,18:1202,21:1209,24:1188,27:1158,30:1157},
+    hblk:{6.5:2142,9:1788,12:1470,15:1306,18:1275,21:1239,24:1217,27:1182,30:1176},
+    hslv:{6.5:2982,9:2368,12:1903,15:1593,18:1515,21:1446,24:1398,27:1341,30:1321}
+  }
 };
+
+// ── SKLEJKA (EUR/m³) — 1220x2440 only ────────────────────────────────────
 var SKLEJKA={
   pi2: {6:1530,9:1335,12:1230,15:1120,18:1120,21:1120,24:1120,27:1130,30:1150},
   pii2:{6:1445,9:1260,12:1160,15:1060,18:1060,21:1060,24:1060,27:1070,30:1085},
@@ -522,97 +261,154 @@ var SKLEJKA={
   hbrn:{9:1680,12:1430,15:1290,18:1270,21:1270,24:1280,27:1290,30:1300}
 };
 
+// ── GRADE / FAMILY CONFIG ──────────────────────────────────────────────────
 var FAM={
   birch:{thk:[6.5,9,12,15,18,21,24,27,30],grades:{
-    bbbb:{l:'BB/BB',           n:'',               ek:'bbbb',lk:'bbbb',sk:null,  st:null,  sm:1},
-    sbb: {l:'S/BB',            n:'ESTply only',    ek:'sbb', lk:null,  sk:null,  st:null,  sm:1},
-    bbwg:{l:'BB/WG',           n:'Latvia only',    ek:null,  lk:'bbwg',sk:null,  st:null,  sm:1},
-    wgwg:{l:'WG/WG',           n:'Latvia only',    ek:null,  lk:'wgwg',sk:null,  st:null,  sm:1}
+    bbbb:{l:'BB/BB',      n:'',            ek:'bbbb',lk:'bbbb',sk:null,  st:null,  sm:1},
+    sbb: {l:'S/BB',       n:'ESTply only', ek:'sbb', lk:null,  sk:null,  st:null,  sm:1},
+    bbwg:{l:'BB/WG',      n:'Latvia only', ek:null,  lk:'bbwg',sk:null,  st:null,  sm:1},
+    wgwg:{l:'WG/WG',      n:'Latvia only', ek:null,  lk:'wgwg',sk:null,  st:null,  sm:1}
   }},
   pine:{thk:[6,9,12,15,18,21,24,27,30],grades:{
-    pi2: {l:'Pine I/II',       n:'Sklejka only',   ek:null,lk:null,sk:'pi2', st:'pine',sm:1},
-    pii2:{l:'Pine II/II',      n:'Sklejka only',   ek:null,lk:null,sk:'pii2',st:'pine',sm:1}
+    pi2: {l:'Pine I/II',  n:'Sklejka only',ek:null,lk:null,sk:'pi2', st:'pine',sm:1},
+    pii2:{l:'Pine II/II', n:'Sklejka only',ek:null,lk:null,sk:'pii2',st:'pine',sm:1}
   }},
   film:{thk:[6.5,9,12,15,18,21,24,27,30,35,40],grades:{
-    fgrp:{l:'Form / RigaForm / Film-Film', n:'ESTply Form \xB7 Latvia RigaForm \xB7 Sklejka Film/Film', ek:'form',lk:'form',sk:'film',st:'film',sm:1},
-    tgrp:{l:'Tex / Wiremesh / Deck',       n:'ESTply Deck \xB7 Latvia RigaTex \xB7 Sklejka Wiremesh',  ek:'deck',lk:'deck',sk:'wire',st:'film',sm:1},
-    hbrn:{l:'Hexa \u2014 Brown',           n:'Latvia Heksa Plus \xB7 Sklejka HEXA Brown',              ek:null,  lk:'hbrn',sk:'hbrn',st:'film',sm:1},
-    hblk:{l:'Hexa \u2014 Black',           n:'Latvia Heksa Plus \xB7 Sklejka HEXA Black (+2%)',        ek:null,  lk:'hblk',sk:'hbrn',st:'film',sm:1.02},
-    hslv:{l:'Hexa \u2014 Silver Grey',     n:'Latvia Heksa Plus only',                                 ek:null,  lk:'hslv',sk:null,  st:null,  sm:1}
+    fgrp:{l:'Form / RigaForm / Film-Film',n:'ESTply Form \xB7 Latvia RigaForm \xB7 Sklejka Film/Film',ek:'form',lk:'form',sk:'film',st:'film',sm:1},
+    tgrp:{l:'Tex / Wiremesh / Deck',      n:'ESTply Deck \xB7 Latvia RigaTex \xB7 Sklejka Wiremesh', ek:'deck',lk:'deck',sk:'wire',st:'film',sm:1},
+    hbrn:{l:'Hexa \u2014 Brown',          n:'Latvia Heksa Plus \xB7 Sklejka HEXA Brown',             ek:null,  lk:'hbrn',sk:'hbrn',st:'film',sm:1},
+    hblk:{l:'Hexa \u2014 Black',          n:'Latvia Heksa Plus \xB7 Sklejka HEXA Black (+2%)',       ek:null,  lk:'hblk',sk:'hbrn',st:'film',sm:1.02},
+    hslv:{l:'Hexa \u2014 Silver Grey',    n:'Latvia Heksa Plus only',                                ek:null,  lk:'hslv',sk:null,  st:null,  sm:1}
   }}
 };
 
-function m3(t){return (t/1000)*SM2;}
+// ── HELPERS ────────────────────────────────────────────────────────────────
 function G(v){return '\xA3'+v.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function E(v){return '\u20AC'+v.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});}
 var CF=6.5,RPP=7,SC=4.43,curFam='birch';
 
-function pk(sup,gc,t){
-  if(sup==='e') return EST_PACKS[t]||null;
-  if(sup==='l') return LAT_PACKS[t]||null;
-  return (gc.st==='pine'?SKL_PINE:SKL_FILM)[t]||null;
+function getPacks(sup,gc,t){
+  if(curSize==='lg'){
+    // Large size: no confirmed pack sizes, use manual input value
+    return null;
+  }
+  if(sup==='e') return EST_SM[t]||null;
+  if(sup==='l') return LAT_SM[t]||null;
+  return (gc.st==='pine'?SKL_PINE_SM:SKL_FILM_SM)[t]||null;
 }
+
 function calcE(t,gc,n,r){
   if(!gc.ek) return null;
-  var pm2=(ESTPLY[gc.ek]||{})[t]; if(pm2==null) return null;
-  var s=pk('e',gc,t); if(!s) return null;
-  var sh=n*s,m3v=sh*m3(t),m2v=sh*SM2,ce=pm2*m2v,cg=ce/r,cc=CF*m3v,rc=n*RPP,tot=cg+cc+rc;
-  return{lbl:'ESTply',tag:'est',s:s,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:(pm2*SM2)/r,
+  var pm2=(ESTPLY[curSize][gc.ek]||{})[t]; if(pm2==null) return null;
+  var m2=sheetM2();
+  var spp=curSize==='lg'?n:getPacks('e',gc,t); // lg: n = sheets directly from pack input
+  var useSpp=curSize==='sm'?spp:null;
+  if(curSize==='sm'&&!spp) return null;
+  var sh=curSize==='sm'?n*spp:n; // lg: packs input = number of packs, need a spp
+  // For large size we use pack input as packs, but spp is unknown — show N/A
+  if(curSize==='lg') return null; // handled below via direct sheet calc
+  var m3v=sh*(t/1000)*m2,m2v=sh*m2,ce=pm2*m2v,cg=ce/r,cc=CF*m3v,rc=n*RPP,tot=cg+cc+rc;
+  return{lbl:'ESTply',tag:'est',s:spp,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:(pm2*m2)/r,
     cl:'<strong>'+E(pm2)+'/m\xB2</strong> &rarr; '+G(pm2/r)+'/m\xB2 at current rate',
     rows:[['CIF ('+E(ce)+' &divide; '+r.toFixed(4)+')',G(cg)],
-          ['Customs + collection (&pound;'+CF.toFixed(2)+'/m&sup3; &times; '+m3v.toFixed(3)+'m&sup3;)',G(cc)],
+          ['Customs+collection (&pound;'+CF.toFixed(2)+'/m\xB3 &times; '+m3v.toFixed(3)+'m\xB3)',G(cc)],
           ['Receiving ('+n+' pack'+(n>1?'s':'')+' &times; &pound;'+RPP+')',G(rc)]]};
 }
+
+function calcELg(t,gc,n,r){
+  if(!gc.ek) return null;
+  var pm2=(ESTPLY.lg[gc.ek]||{})[t]; if(pm2==null) return null;
+  var m2=sheetM2();
+  var spp=parseInt(document.getElementById('spp_est_lg').value)||20;
+  var sh=n*spp,m3v=sh*(t/1000)*m2,m2v=sh*m2;
+  var ce=pm2*m2v,cg=ce/r,cc=CF*m3v,rc=n*RPP,tot=cg+cc+rc;
+  return{lbl:'ESTply',tag:'est',s:spp,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:(pm2*m2)/r,
+    cl:'<strong>'+E(pm2)+'/m\xB2</strong> &rarr; '+G(pm2/r)+'/m\xB2 at current rate',
+    rows:[['CIF ('+E(ce)+' &divide; '+r.toFixed(4)+')',G(cg)],
+          ['Customs+collection (&pound;'+CF.toFixed(2)+'/m\xB3 &times; '+m3v.toFixed(3)+'m\xB3)',G(cc)],
+          ['Receiving ('+n+' pack'+(n>1?'s':'')+' &times; &pound;'+RPP+')',G(rc)]]};
+}
+
 function calcL(t,gc,n){
   if(!gc.lk) return null;
-  var pm3=(LATVIA[gc.lk]||{})[t]; if(pm3==null) return null;
-  var s=pk('l',gc,t); if(!s) return null;
-  var sh=n*s,m3v=sh*m3(t),base=pm3*m3v,tr=8*m3v,sub=base+tr,sur=sub*(SC/100),cif=sub+sur;
+  var pm3=(LATVIA[curSize][gc.lk]||{})[t]; if(pm3==null) return null;
+  var m2=sheetM2();
+  if(curSize==='lg'){
+    var spp=parseInt(document.getElementById('spp_lat_lg').value)||15;
+    var sh=n*spp,m3v=sh*(t/1000)*m2,base=pm3*m3v,tr=8*m3v,sub=base+tr,sur=sub*(SC/100),cif=sub+sur;
+    var cc=CF*m3v,rc=n*RPP,tot=cif+cc+rc;
+    return{lbl:'Latvijas Finieris',tag:'lat',s:spp,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:cif/sh,
+      cl:'<strong>'+G(pm3)+'/m\xB3</strong> base &rarr; '+G((pm3+8)*(1+SC/100))+'/m\xB3 inc. surcharge',
+      rows:[['CIF base ('+G(pm3)+'/m\xB3)',G(base)],['Transport (&pound;8/m\xB3)',G(tr)],
+            ['Surcharge ('+SC+'%)',G(sur)],
+            ['Customs+collection (&pound;'+CF.toFixed(2)+'/m\xB3 &times; '+m3v.toFixed(3)+'m\xB3)',G(cc)],
+            ['Receiving ('+n+' pack'+(n>1?'s':'')+' &times; &pound;'+RPP+')',G(rc)]]};
+  }
+  var spp=LAT_SM[t]; if(!spp) return null;
+  var sh=n*spp,m3v=sh*(t/1000)*m2,base=pm3*m3v,tr=8*m3v,sub=base+tr,sur=sub*(SC/100),cif=sub+sur;
   var cc=CF*m3v,rc=n*RPP,tot=cif+cc+rc;
-  return{lbl:'Latvijas Finieris',tag:'lat',s:s,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:cif/sh,
-    cl:'<strong>'+G(pm3)+'/m&sup3;</strong> base &rarr; '+G((pm3+8)*(1+SC/100))+'/m&sup3; inc. surcharge',
-    rows:[['CIF base ('+G(pm3)+'/m&sup3;)',G(base)],
-          ['Transport (&pound;8/m&sup3;)',G(tr)],
+  return{lbl:'Latvijas Finieris',tag:'lat',s:spp,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:cif/sh,
+    cl:'<strong>'+G(pm3)+'/m\xB3</strong> base &rarr; '+G((pm3+8)*(1+SC/100))+'/m\xB3 inc. surcharge',
+    rows:[['CIF base ('+G(pm3)+'/m\xB3)',G(base)],['Transport (&pound;8/m\xB3)',G(tr)],
           ['Surcharge ('+SC+'%)',G(sur)],
-          ['Customs + collection (&pound;'+CF.toFixed(2)+'/m&sup3; &times; '+m3v.toFixed(3)+'m&sup3;)',G(cc)],
+          ['Customs+collection (&pound;'+CF.toFixed(2)+'/m\xB3 &times; '+m3v.toFixed(3)+'m\xB3)',G(cc)],
           ['Receiving ('+n+' pack'+(n>1?'s':'')+' &times; &pound;'+RPP+')',G(rc)]]};
 }
+
 function calcS(t,gc,n,r){
-  if(!gc.sk) return null;
+  if(!gc.sk||curSize==='lg') return null;
   var raw=(SKLEJKA[gc.sk]||{})[t]; if(raw==null) return null;
-  var pm3=raw*(gc.sm||1),s=pk('s',gc,t); if(!s) return null;
-  var sh=n*s,m3v=sh*m3(t),ce=pm3*m3v,cg=ce/r,cc=50,rc=n*RPP,tot=cg+cc+rc;
+  var pm3=raw*(gc.sm||1),m2=sheetM2();
+  var spp=(gc.st==='pine'?SKL_PINE_SM:SKL_FILM_SM)[t]; if(!spp) return null;
+  var sh=n*spp,m3v=sh*(t/1000)*m2,ce=pm3*m3v,cg=ce/r,cc=50,rc=n*RPP,tot=cg+cc+rc;
   var mn=gc.sm>1?' (+'+Math.round((gc.sm-1)*100)+'% black)':'';
-  return{lbl:'Sklejka Multi',tag:'skl',s:s,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:cg/sh,
-    cl:'<strong>'+E(pm3)+'/m&sup3;</strong>'+mn+' &rarr; '+G(pm3/r)+'/m&sup3; at current rate',
+  return{lbl:'Sklejka Multi',tag:'skl',s:spp,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:cg/sh,
+    cl:'<strong>'+E(pm3)+'/m\xB3</strong>'+mn+' &rarr; '+G(pm3/r)+'/m\xB3 at current rate',
     rows:[['CIF ('+E(ce)+' &divide; '+r.toFixed(4)+')',G(cg)],
-          ['Customs (&pound;50 flat per delivery)',G(cc)],
+          ['Customs (&pound;50 flat)',G(cc)],
           ['Receiving ('+n+' pack'+(n>1?'s':'')+' &times; &pound;'+RPP+')',G(rc)]]};
 }
 
 function renderCard(res,n,win){
   if(!res){
-    return '<div class="result-card na">'
-      +'<div class="rc-price" style="font-size:20px;color:var(--text3)">N/A</div>'
-      +'<div class="rc-price-sub">Not available</div>'
-      +'<hr class="rc-divider"><div class="rc-na">This supplier does not offer this grade</div>'
-      +'</div>';
+    var naMsg=curSize==='lg'&&n>0?'Not available at 1525&times;3050 for this supplier/grade':'This supplier does not offer this grade';
+    return '<div class="result-card na"><div class="rc-price" style="font-size:20px;color:var(--text3)">N/A</div>'
+      +'<div class="rc-price-sub">Not available</div><hr class="rc-divider"><div class="rc-na">'+naMsg+'</div></div>';
   }
   var rows=res.rows.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>';}).join('');
   return '<div class="result-card'+(win?' winner':'')+'">'
-    +'<div class="rc-header">'
-    +'<span class="rc-name">'+res.lbl+'</span>'
-    +'<span class="rc-tag tag-'+res.tag+'">'+res.tag.toUpperCase()+'</span>'
-    +'</div>'
+    +'<div class="rc-header"><span class="rc-name">'+res.lbl+'</span><span class="rc-tag tag-'+res.tag+'">'+res.tag.toUpperCase()+'</span></div>'
     +'<div class="rc-packs">'+res.s+' sheets/pack &nbsp;&middot;&nbsp; '+n+' pack'+(n>1?'s':'')+' = '+res.sh+' sheets</div>'
     +'<div class="rc-price">'+G(res.psl)+'</div>'
     +'<div class="rc-price-sub">per sheet landed &nbsp;&middot;&nbsp; CIF only: '+G(res.pcif)+'/sheet</div>'
     +(win?'<div class="winner-pill">&#10003; Cheapest per sheet</div>':'')
-    +'<hr class="rc-divider">'
-    +'<div class="rc-cif">'+res.cl+'</div>'
+    +'<hr class="rc-divider"><div class="rc-cif">'+res.cl+'</div>'
     +'<table class="rc-breakdown">'+rows
     +'<tr class="total"><td>Order total &nbsp;&middot;&nbsp; '+res.sh+' sheets &nbsp;&middot;&nbsp; '+res.m3.toFixed(3)+' m&sup3;</td><td>'+G(res.tot)+'</td></tr>'
     +'</table></div>';
+}
+
+// Extra inputs shown only for large size
+function renderLgPackInputs(){
+  var ex=document.getElementById('lg-pack-inputs');
+  if(!ex){
+    var div=document.createElement('div');
+    div.id='lg-pack-inputs';
+    div.style.cssText='margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:12px;';
+    div.innerHTML='<div class="field"><label>Sheets/pack — ESTply (1525&times;3050)</label>'
+      +'<input type="number" id="spp_est_lg" value="20" min="1" step="1"></div>'
+      +'<div class="field"><label>Sheets/pack — Latvia (1525&times;3050)</label>'
+      +'<input type="number" id="spp_lat_lg" value="15" min="1" step="1"></div>';
+    document.querySelector('.params-card').appendChild(div);
+    ['spp_est_lg','spp_lat_lg'].forEach(function(id){
+      document.getElementById(id).addEventListener('input',update);
+    });
+  }
+  document.getElementById('lg-pack-inputs').style.display='grid';
+}
+function hideLgPackInputs(){
+  var ex=document.getElementById('lg-pack-inputs');
+  if(ex) ex.style.display='none';
 }
 
 function buildGradeSelect(){
@@ -629,24 +425,31 @@ function buildThicknessSelect(){
     if(t===cur)o.selected=true;ts.appendChild(o);
   });
 }
+
 function update(){
-  var fam=document.getElementById('family').value;
   var gk=document.getElementById('grade').value;
   var t=parseFloat(document.getElementById('thickness').value);
   var r=parseFloat(document.getElementById('gbpeur').value)||1.1555;
   var pe=parseInt(document.getElementById('packs_est').value)||1;
   var pl=parseInt(document.getElementById('packs_lat').value)||1;
   var ps=parseInt(document.getElementById('packs_skl').value)||1;
-  curFam=fam;
-  var gc=FAM[fam].grades[gk];if(!gc)return;
-  var eR=calcE(t,gc,pe,r),lR=calcL(t,gc,pl),sR=calcS(t,gc,ps,r);
+  var gc=FAM[curFam].grades[gk];if(!gc)return;
+
+  if(curSize==='lg'){renderLgPackInputs();}else{hideLgPackInputs();}
+
+  var eR=curSize==='lg'?calcELg(t,gc,pe,r):calcE(t,gc,pe,r);
+  var lR=calcL(t,gc,pl);
+  var sR=calcS(t,gc,ps,r);
+
   var av=[{r:eR,n:pe},{r:lR,n:pl},{r:sR,n:ps}].filter(function(x){return x.r!==null;});
   var wp=av.length?Math.min.apply(null,av.map(function(x){return x.r.psl;})):null;
+
   document.getElementById('results').innerHTML=
     [{r:eR,n:pe},{r:lR,n:pl},{r:sR,n:ps}].map(function(x){
       var w=x.r&&av.length>1&&Math.abs(x.r.psl-wp)<0.005;
       return renderCard(x.r,x.n,w);
     }).join('');
+
   var vd=document.getElementById('verdict');
   if(!av.length){
     vd.innerHTML='<span class="verdict-main" style="color:var(--text3)">No data for this combination</span>';
@@ -663,6 +466,7 @@ function update(){
       +'<span class="verdict-sub">Saving <span class="hl">'+G(sv)+'/sheet</span> &nbsp;&middot;&nbsp; '+pct+'% vs next cheapest</span>';
   }
 }
+
 document.getElementById('family').addEventListener('change',function(){
   curFam=this.value;buildGradeSelect();buildThicknessSelect();update();
 });
