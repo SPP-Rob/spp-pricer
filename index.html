@@ -9,7 +9,7 @@
   --green:#0e7d3c;--green-dark:#0a6130;--green-light:#e8f5ee;--green-mid:#c2e0ce;
   --bg:#f4f6f8;--surface:#fff;--surface2:#f9fafb;
   --border:#e2e6ea;--border2:#d0d7de;
-  --text:#1a1f2e;--text2:#4a5568;--text3:#8a96a8;--red:#c0392b;
+  --text:#1a1f2e;--text2:#4a5568;--text3:#8a96a8;--red:#c0392b;--amber:#d97706;
   --radius:8px;
   --shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.04);
   --sans:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
@@ -21,79 +21,155 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
 /* LOGIN */
 #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(145deg,#0e7d3c 0%,#0a6130 60%,#085228 100%);}
 .login-box{background:var(--surface);border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,0.25);padding:52px 48px;width:380px;text-align:center;}
-.login-mark{width:58px;height:58px;background:var(--green);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:15px;font-weight:700;color:#fff;letter-spacing:-0.5px;}
-.login-title{font-size:22px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.login-mark{width:58px;height:58px;background:var(--green);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:15px;font-weight:700;color:#fff;}
+.login-title{font-size:22px;font-weight:600;margin-bottom:6px;}
 .login-sub{font-size:14px;color:var(--text3);margin-bottom:34px;}
-.login-box input[type="password"]{width:100%;background:var(--surface2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-size:20px;letter-spacing:0.25em;padding:14px 16px;text-align:center;outline:none;margin-bottom:14px;transition:border-color .15s,box-shadow .15s;}
-.login-box input[type="password"]:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(14,125,60,0.12);}
+.login-box input[type=password]{width:100%;background:var(--surface2);border:1.5px solid var(--border2);border-radius:var(--radius);color:var(--text);font-size:20px;letter-spacing:0.25em;padding:14px 16px;text-align:center;outline:none;margin-bottom:14px;transition:border-color .15s,box-shadow .15s;}
+.login-box input[type=password]:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(14,125,60,0.12);}
 .login-btn{width:100%;background:var(--green);border:none;border-radius:var(--radius);color:#fff;font-size:15px;font-weight:600;padding:14px;cursor:pointer;transition:background .15s;}
 .login-btn:hover{background:var(--green-dark);}
 .login-error{font-size:13px;color:var(--red);margin-top:12px;min-height:18px;}
 
 /* APP */
 #app{display:none;}
-.top-bar{background:var(--green);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:62px;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
-.top-logo{display:flex;align-items:center;gap:12px;}
-.top-logo-mark{background:rgba(255,255,255,0.2);border-radius:7px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;letter-spacing:-0.5px;}
-.top-logo-text{font-size:18px;font-weight:600;color:#fff;letter-spacing:-0.2px;}
-.top-logo-text span{font-weight:400;opacity:0.75;font-size:14px;margin-left:8px;}
-.top-meta{font-size:13px;color:rgba(255,255,255,0.65);}
+.top-bar{background:var(--green);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:62px;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
+.top-logo{display:flex;align-items:center;gap:10px;}
+.top-logo img{height:32px;filter:brightness(0) invert(1);opacity:0.95;}
+.top-logo-text{font-size:15px;font-weight:600;color:#fff;}
+.top-logo-text span{font-weight:400;opacity:0.7;font-size:13px;margin-left:6px;}
+.rate-bar{display:flex;align-items:center;gap:12px;font-size:13px;}
+.rate-info{color:rgba(255,255,255,0.8);font-family:var(--mono);}
+.rate-info strong{color:#fff;}
+.rate-stale{color:var(--amber);font-size:11px;}
+.rate-refresh{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);border-radius:6px;color:#fff;font-size:12px;padding:5px 10px;cursor:pointer;transition:background .15s;font-family:var(--sans);}
+.rate-refresh:hover{background:rgba(255,255,255,0.25);}
 
-.main{padding:24px 32px 40px;max-width:1440px;margin:0 auto;}
+.main{padding:20px 28px 40px;max-width:1440px;margin:0 auto;}
 
-/* PARAMS */
-.params-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px 28px;margin-bottom:18px;}
-.section-label{font-size:12px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:18px;}
-.params-row{display:grid;gap:14px;margin-bottom:14px;}
-.params-row:last-child{margin-bottom:0;}
-.pr-3{grid-template-columns:repeat(3,1fr);}
-.pr-5{grid-template-columns:auto repeat(4,1fr);}
-@media(max-width:720px){.pr-3,.pr-5{grid-template-columns:1fr 1fr;}}
-.field{display:flex;flex-direction:column;gap:6px;}
-.field label{font-size:13px;font-weight:500;color:var(--text2);}
-.field select,.field input{background:var(--surface);border:1.5px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--sans);font-size:15px;padding:10px 12px;outline:none;width:100%;transition:border-color .15s,box-shadow .15s;appearance:none;-webkit-appearance:none;}
-.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238a96a8' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+/* MODE TABS */
+.mode-tabs{display:flex;gap:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:18px;width:fit-content;}
+.mode-tab{padding:11px 24px;font-size:14px;font-weight:500;color:var(--text3);cursor:pointer;border:none;background:none;font-family:var(--sans);transition:color .15s,background .15s;border-right:1px solid var(--border);}
+.mode-tab:last-child{border-right:none;}
+.mode-tab.active{background:var(--green);color:#fff;}
+
+/* COMPARE MODE */
+#compare-mode .params-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 24px;margin-bottom:18px;}
+.section-label{font-size:11px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;}
+.pg3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;}
+.pg4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px;}
+.pg5{display:grid;grid-template-columns:auto repeat(4,1fr);gap:12px;}
+.pg2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:12px;font-weight:500;color:var(--text2);}
+.field select,.field input{background:var(--surface);border:1.5px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--sans);font-size:14px;padding:9px 11px;outline:none;width:100%;transition:border-color .15s,box-shadow .15s;appearance:none;-webkit-appearance:none;}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238a96a8' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;}
 .field select:focus,.field input:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(14,125,60,0.1);}
-
-/* SIZE TOGGLE */
-.size-toggle-wrap{display:flex;flex-direction:column;gap:6px;}
-.size-toggle-wrap label{font-size:13px;font-weight:500;color:var(--text2);}
-.size-toggle{display:inline-flex;background:var(--surface2);border:1.5px solid var(--border2);border-radius:6px;overflow:hidden;}
-.size-toggle button{background:none;border:none;padding:9px 16px;font-size:14px;font-weight:500;color:var(--text3);cursor:pointer;transition:background .15s,color .15s;font-family:var(--sans);}
+.size-toggle-wrap{display:flex;flex-direction:column;gap:5px;}
+.size-toggle-wrap label{font-size:12px;font-weight:500;color:var(--text2);}
+.size-toggle{display:inline-flex;background:var(--surface2);border:1.5px solid var(--border2);border-radius:6px;overflow:hidden;flex-wrap:wrap;}
+.size-toggle button{background:none;border:none;padding:8px 12px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;transition:background .15s,color .15s;font-family:var(--sans);border-right:1px solid var(--border2);}
+.size-toggle button:last-child{border-right:none;}
 .size-toggle button.active{background:var(--green);color:#fff;}
-
-/* RESULTS */
-.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:16px;}
-@media(max-width:860px){.results-grid{grid-template-columns:1fr;}}
-.result-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;transition:border-color .2s,box-shadow .2s;}
-.result-card.winner{border-color:var(--green);box-shadow:0 0 0 3px rgba(14,125,60,0.1),var(--shadow);}
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;}
+.result-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;}
+.result-card.winner{border-color:var(--green);box-shadow:0 0 0 3px rgba(14,125,60,0.1);}
 .result-card.na{background:var(--surface2);opacity:0.55;}
-.rc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
-.rc-name{font-size:16px;font-weight:600;color:var(--text);}
-.rc-tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:0.06em;}
+.rc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;}
+.rc-name{font-size:14px;font-weight:600;}
+.rc-tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:0.05em;}
 .tag-est{background:#dbeafe;color:#1d4ed8;}
 .tag-lat{background:#fef3c7;color:#92400e;}
 .tag-skl{background:var(--green-light);color:var(--green-dark);}
-.rc-packs{font-size:13px;color:var(--text3);margin-bottom:18px;font-family:var(--mono);}
-.rc-price{font-family:var(--mono);font-size:46px;font-weight:500;color:var(--text);line-height:1;margin-bottom:4px;letter-spacing:-1.5px;}
+.rc-packs{font-size:12px;color:var(--text3);margin-bottom:14px;font-family:var(--mono);}
+.rc-price{font-family:var(--mono);font-size:40px;font-weight:500;line-height:1;margin-bottom:3px;letter-spacing:-1px;}
 .result-card.winner .rc-price{color:var(--green);}
-.rc-price-sub{font-size:13px;color:var(--text3);margin-bottom:16px;font-family:var(--mono);}
-.winner-pill{display:inline-flex;align-items:center;gap:5px;background:var(--green-light);color:var(--green);border:1px solid var(--green-mid);font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px;margin-bottom:16px;}
-.rc-divider{border:none;border-top:1px solid var(--border);margin:14px 0;}
-.rc-cif{font-family:var(--mono);font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.65;background:var(--surface2);border-radius:6px;padding:9px 11px;}
+.rc-price-sub{font-size:12px;color:var(--text3);margin-bottom:12px;font-family:var(--mono);}
+.winner-pill{display:inline-flex;align-items:center;gap:4px;background:var(--green-light);color:var(--green);border:1px solid var(--green-mid);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:12px;}
+.rc-divider{border:none;border-top:1px solid var(--border);margin:10px 0;}
+.rc-cif{font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:8px;line-height:1.6;background:var(--surface2);border-radius:5px;padding:7px 9px;}
 .rc-cif strong{color:var(--text2);}
 .rc-breakdown{width:100%;border-collapse:collapse;}
-.rc-breakdown td{font-family:var(--mono);font-size:12px;color:var(--text3);padding:3.5px 0;vertical-align:top;}
-.rc-breakdown td:last-child{text-align:right;padding-left:10px;white-space:nowrap;color:var(--text2);}
-.rc-breakdown tr.total td{border-top:1px solid var(--border);padding-top:8px;color:var(--text);font-weight:500;font-size:14px;}
-.rc-na{font-size:14px;color:var(--text3);margin-top:12px;font-style:italic;}
-
-/* VERDICT */
-.verdict-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 24px;display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;flex-wrap:wrap;}
-.verdict-main{font-size:17px;font-weight:600;color:var(--text);}
-.verdict-sub{font-size:14px;color:var(--text3);font-family:var(--mono);}
+.rc-breakdown td{font-family:var(--mono);font-size:11px;color:var(--text3);padding:2.5px 0;vertical-align:top;}
+.rc-breakdown td:last-child{text-align:right;padding-left:8px;white-space:nowrap;color:var(--text2);}
+.rc-breakdown tr.total td{border-top:1px solid var(--border);padding-top:6px;color:var(--text);font-weight:500;font-size:13px;}
+.rc-na{font-size:13px;color:var(--text3);margin-top:8px;font-style:italic;}
+.verdict-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;flex-wrap:wrap;}
+.verdict-main{font-size:15px;font-weight:600;}
+.verdict-sub{font-size:13px;color:var(--text3);font-family:var(--mono);}
 .verdict-sub .hl{color:var(--green);font-weight:500;}
-.verdict-sep{color:var(--border2);font-size:20px;line-height:1;}
+.verdict-sep{color:var(--border2);font-size:18px;}
+.stale-badge{display:inline-block;background:#fef3c7;color:var(--amber);font-size:10px;padding:1px 6px;border-radius:4px;margin-left:6px;font-weight:500;}
+
+/* LOAD BUILDER */
+#builder-mode{display:none;}
+.builder-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 24px;margin-bottom:16px;}
+.builder-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px;}
+.builder-top-left{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.supplier-lock{display:flex;align-items:center;gap:8px;}
+.supplier-lock label{font-size:12px;font-weight:500;color:var(--text2);}
+.supplier-btns{display:flex;background:var(--surface2);border:1.5px solid var(--border2);border-radius:6px;overflow:hidden;}
+.supplier-btn{background:none;border:none;padding:7px 14px;font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;font-family:var(--sans);border-right:1px solid var(--border2);transition:background .15s,color .15s;}
+.supplier-btn:last-child{border-right:none;}
+.supplier-btn.active-est{background:#dbeafe;color:#1d4ed8;}
+.supplier-btn.active-lat{background:#fef3c7;color:#92400e;}
+.supplier-btn.active-skl{background:var(--green-light);color:var(--green-dark);}
+.load-target{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text2);}
+.load-target input{width:70px;padding:6px 8px;font-size:13px;border:1.5px solid var(--border2);border-radius:6px;text-align:center;}
+.builder-top-right{display:flex;gap:8px;}
+.btn-add{background:var(--green);border:none;border-radius:6px;color:#fff;font-size:13px;font-weight:600;padding:8px 16px;cursor:pointer;font-family:var(--sans);}
+.btn-add:hover{background:var(--green-dark);}
+.btn-print{background:var(--surface);border:1.5px solid var(--border2);border-radius:6px;color:var(--text2);font-size:13px;font-weight:500;padding:8px 16px;cursor:pointer;font-family:var(--sans);}
+.btn-print:hover{border-color:var(--green);color:var(--green);}
+.btn-clear{background:var(--surface);border:1.5px solid var(--border2);border-radius:6px;color:var(--red);font-size:13px;font-weight:500;padding:8px 14px;cursor:pointer;font-family:var(--sans);}
+
+/* BUILDER TABLE */
+.builder-table-wrap{overflow-x:auto;}
+.builder-table{width:100%;border-collapse:collapse;font-size:13px;}
+.builder-table th{background:var(--surface2);border-bottom:2px solid var(--border);padding:9px 10px;text-align:left;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
+.builder-table td{border-bottom:1px solid var(--border);padding:8px 10px;vertical-align:middle;}
+.builder-table tr:last-child td{border-bottom:none;}
+.builder-table select,.builder-table input[type=number]{background:var(--surface);border:1.5px solid var(--border2);border-radius:5px;color:var(--text);font-family:var(--sans);font-size:13px;padding:6px 8px;outline:none;transition:border-color .15s;}
+.builder-table select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath fill='%238a96a8' d='M0 0l4 5 4-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;}
+.builder-table select:focus,.builder-table input:focus{border-color:var(--green);}
+.builder-table select.sel-family{width:160px;}
+.builder-table select.sel-grade{width:190px;}
+.builder-table select.sel-thk{width:80px;}
+.builder-table select.sel-size{width:130px;}
+.builder-table input.inp-packs{width:70px;text-align:center;}
+.cell-spp{font-family:var(--mono);font-size:12px;color:var(--text3);}
+.cell-price{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text);}
+.cell-m3{font-family:var(--mono);font-size:12px;color:var(--text2);}
+.cell-total{font-family:var(--mono);font-size:13px;font-weight:600;}
+.btn-remove{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:4px;}
+.btn-remove:hover{color:var(--red);background:rgba(192,57,43,0.08);}
+.row-na td{opacity:0.4;}
+.row-best .cell-price{color:var(--green);}
+
+/* LOAD SUMMARY BAR */
+.load-summary{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.load-m3-bar-wrap{flex:1;min-width:200px;}
+.load-m3-label{font-size:12px;color:var(--text3);margin-bottom:5px;font-family:var(--mono);}
+.load-m3-bar{height:10px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);overflow:hidden;}
+.load-m3-fill{height:100%;background:var(--green);border-radius:10px;transition:width .3s;}
+.load-m3-fill.over{background:var(--amber);}
+.load-stats{display:flex;gap:24px;flex-wrap:wrap;}
+.load-stat{text-align:center;}
+.load-stat-val{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--text);}
+.load-stat-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* PRINT */
+@media print{
+  body{background:#fff;font-size:12px;}
+  #login-screen,#app>.top-bar,.mode-tabs,.builder-top .btn-print,.builder-top .btn-add,.builder-top .btn-clear,.btn-remove{display:none!important;}
+  #app{display:block!important;}
+  #builder-mode{display:block!important;}
+  #compare-mode{display:none!important;}
+  .builder-card{box-shadow:none;border:1px solid #ccc;padding:12px;}
+  .load-summary{box-shadow:none;border:1px solid #ccc;}
+  .print-header{display:flex!important;align-items:center;justify-content:space-between;padding:0 0 14px;margin-bottom:14px;border-bottom:2px solid #0e7d3c;}
+  .print-meta{font-size:11px;color:#666;text-align:right;}
+}
+.print-header{display:none;}
 </style>
 </head>
 <body>
@@ -112,94 +188,179 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
 <div id="app">
   <div class="top-bar">
     <div class="top-logo">
-      <div class="top-logo-mark">SPP</div>
+      <img src="https://lirp.cdn-website.com/c77bc2b8/dms3rep/multi/opt/Specialised-Panel-Products-Logo-9f2cae2a-360w.jpg" alt="SPP" onerror="this.style.display='none'">
       <div class="top-logo-text">SPP Pricer <span>Supplier Cost Comparison</span></div>
     </div>
-    <div class="top-meta">ESTply &nbsp;·&nbsp; Latvijas Finieris &nbsp;·&nbsp; Sklejka Multi</div>
+    <div class="rate-bar">
+      <div class="rate-info" id="rate-display">Loading rate...</div>
+      <button class="rate-refresh" onclick="fetchRate()">&#8635; Refresh</button>
+    </div>
   </div>
+
   <div class="main">
-    <div class="params-card">
-      <div class="section-label">Parameters</div>
-      <div class="params-row pr-3">
-        <div class="field">
-          <label>Product family</label>
-          <select id="family">
-            <option value="birch">Birch plywood</option>
-            <option value="pine">Pine plywood (Sklejka)</option>
-            <option value="film">Film faced / Hexa / Tex</option>
-          </select>
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tab-compare" onclick="setMode('compare')">&#9654; Compare Prices</button>
+      <button class="mode-tab" id="tab-builder" onclick="setMode('builder')">&#9776; Load Builder</button>
+    </div>
+
+    <!-- COMPARE MODE -->
+    <div id="compare-mode">
+      <div class="params-card">
+        <div class="section-label">Parameters</div>
+        <div class="pg3">
+          <div class="field"><label>Product family</label><select id="c-family"></select></div>
+          <div class="field"><label>Grade / type</label><select id="c-grade"></select></div>
+          <div class="field"><label>Thickness (mm)</label><select id="c-thickness"></select></div>
         </div>
-        <div class="field">
-          <label>Grade / type</label>
-          <select id="grade"></select>
+        <div class="pg5">
+          <div class="size-toggle-wrap"><label>Sheet size</label><div class="size-toggle" id="c-size-toggle"></div></div>
+          <div class="field"><label>Packs — ESTply</label><input type="number" id="c-pe" value="1" min="1"></div>
+          <div class="field"><label>Packs — Latvia</label><input type="number" id="c-pl" value="1" min="1"></div>
+          <div class="field"><label>Packs — Sklejka</label><input type="number" id="c-ps" value="1" min="1"></div>
+          <div class="field"><label>GBP/EUR (£1=€)</label><input type="number" id="c-rate" value="1.1555" step="0.001"></div>
         </div>
-        <div class="field">
-          <label>Thickness (mm)</label>
-          <select id="thickness"></select>
+        <div id="c-lg-packs" style="display:none;" class="pg2">
+          <div class="field"><label>Sheets/pack — ESTply (large)</label><input type="number" id="c-spp-est" value="20" min="1"></div>
+          <div class="field"><label>Sheets/pack — Latvia (large)</label><input type="number" id="c-spp-lat" value="15" min="1"></div>
         </div>
       </div>
-      <div class="params-row pr-5">
-        <div class="size-toggle-wrap">
-          <label>Sheet size</label>
-          <div class="size-toggle">
-            <button id="btn-sm" class="active" onclick="setSize('sm')">1220×2440</button>
-            <button id="btn-lg" onclick="setSize('lg')">1525×3050</button>
+      <div class="results-grid" id="c-results"></div>
+      <div class="verdict-card" id="c-verdict"></div>
+    </div>
+
+    <!-- LOAD BUILDER -->
+    <div id="builder-mode">
+      <div class="print-header">
+        <img src="https://lirp.cdn-website.com/c77bc2b8/dms3rep/multi/opt/Specialised-Panel-Products-Logo-9f2cae2a-360w.jpg" alt="SPP" style="height:40px;">
+        <div class="print-meta" id="print-meta"></div>
+      </div>
+      <div class="builder-card">
+        <div class="builder-top">
+          <div class="builder-top-left">
+            <div class="supplier-lock">
+              <label>Supplier</label>
+              <div class="supplier-btns">
+                <button class="supplier-btn active-est" id="bsup-est" onclick="setBuilderSupplier('est')">ESTply</button>
+                <button class="supplier-btn" id="bsup-lat" onclick="setBuilderSupplier('lat')">Latvia</button>
+                <button class="supplier-btn" id="bsup-skl" onclick="setBuilderSupplier('skl')">Sklejka</button>
+              </div>
+            </div>
+            <div class="load-target">
+              <label style="font-size:13px;color:var(--text2);font-weight:500;">Load target</label>
+              <input type="number" id="b-target" value="32" min="1" step="0.5" onchange="updateBuilder()">
+              <span style="color:var(--text3);">m³</span>
+            </div>
+            <div class="field" style="flex-direction:row;align-items:center;gap:8px;">
+              <label style="font-size:12px;color:var(--text2);font-weight:500;">GBP/EUR</label>
+              <input type="number" id="b-rate" value="1.1555" step="0.001" style="width:90px;padding:6px 8px;font-size:13px;border:1.5px solid var(--border2);border-radius:6px;">
+            </div>
+          </div>
+          <div class="builder-top-right">
+            <button class="btn-clear" onclick="clearBuilder()">✕ Clear</button>
+            <button class="btn-add" onclick="addRow()">+ Add line</button>
+            <button class="btn-print" onclick="printLoad()">&#128438; Print</button>
           </div>
         </div>
-        <div class="field">
-          <label>Packs — ESTply</label>
-          <input type="number" id="packs_est" value="1" min="1" step="1">
-        </div>
-        <div class="field">
-          <label>Packs — Latvia</label>
-          <input type="number" id="packs_lat" value="1" min="1" step="1">
-        </div>
-        <div class="field">
-          <label>Packs — Sklejka</label>
-          <input type="number" id="packs_skl" value="1" min="1" step="1">
-        </div>
-        <div class="field">
-          <label>GBP / EUR (£1 = €)</label>
-          <input type="number" id="gbpeur" value="1.1555" step="0.001" min="0.5" max="2.0">
+        <div class="builder-table-wrap">
+          <table class="builder-table">
+            <thead>
+              <tr>
+                <th>Family</th><th>Grade</th><th>Size</th><th>Thickness</th>
+                <th>Sheets/pack</th><th>Packs</th><th>Sheets</th>
+                <th>m³</th><th>Cost/sheet</th><th>Line total</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="b-tbody"></tbody>
+          </table>
         </div>
       </div>
+      <div class="load-summary" id="b-summary">
+        <div style="font-size:14px;color:var(--text3);">Add lines above to build your load</div>
+      </div>
     </div>
-    <div class="results-grid" id="results"></div>
-    <div class="verdict-card" id="verdict"></div>
   </div>
 </div>
 
 <script>
+// ── AUTH ──────────────────────────────────────────────────────────────────
 function doLogin(){
-  var v=document.getElementById('pw-input').value;
-  if(v==='0199201992'){
+  if(document.getElementById('pw-input').value==='0199201992'){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app').style.display='block';
-    buildGradeSelect();buildThicknessSelect();update();
+    fetchRate();
+    initCompare();
+    initBuilder();
   } else {
     document.getElementById('login-err').textContent='Incorrect password';
     document.getElementById('pw-input').value='';
   }
 }
 
-var curSize='sm',curFam='birch';
-function sheetM2(){return curSize==='sm'?1.22*2.44:1.525*3.05;}
-function setSize(sz){
-  curSize=sz;
-  document.getElementById('btn-sm').className=sz==='sm'?'active':'';
-  document.getElementById('btn-lg').className=sz==='lg'?'active':'';
-  update();
+// ── LIVE RATE ─────────────────────────────────────────────────────────────
+var liveRate=1.1555, sppRate=1.1655, rateAge=null, rateStale=false;
+var MARKUP=0.01;
+function fetchRate(){
+  document.getElementById('rate-display').innerHTML='<span style="opacity:0.6">Fetching...</span>';
+  fetch('https://api.exchangerate-api.com/v4/latest/GBP')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      liveRate=d.rates.EUR;
+      sppRate=+(liveRate+MARKUP).toFixed(4);
+      rateAge=new Date();
+      rateStale=false;
+      updateRateDisplay();
+      syncRateToInputs();
+    })
+    .catch(function(){
+      document.getElementById('rate-display').innerHTML='<span style="color:rgba(255,255,255,0.5)">Rate unavailable — enter manually</span>';
+    });
+}
+function updateRateDisplay(){
+  var staleHtml='';
+  if(rateAge){
+    var mins=Math.round((new Date()-rateAge)/60000);
+    if(mins>30){rateStale=true;staleHtml='<span class="rate-stale"> ('+mins+'m ago)</span>';}
+  }
+  document.getElementById('rate-display').innerHTML=
+    'Live: <strong>\u20AC'+liveRate.toFixed(4)+'</strong>'
+    +' &nbsp;\u00B7&nbsp; SPP buy rate: <strong>\u20AC'+sppRate.toFixed(4)+'</strong>'+staleHtml;
+}
+function syncRateToInputs(){
+  document.getElementById('c-rate').value=sppRate.toFixed(4);
+  document.getElementById('b-rate').value=sppRate.toFixed(4);
+  updateCompare();updateBuilder();
 }
 
-var EST_SM={6.5:120,9:65,12:65,15:50,18:40,21:35,24:30,27:25,30:20};
-var LAT_SM={6.5:90,9:65,12:50,15:40,18:35,21:35,24:30,27:25,30:20};
-var SKL_FILM_SM={9:65,12:50,15:40,18:35,21:35,24:30,27:25,30:20,35:20,40:20};
+// ── DATA ──────────────────────────────────────────────────────────────────
+var EST_PACKS_SM={6.5:120,9:65,12:65,15:50,18:40,21:35,24:30,27:25,30:20,50:10};
+var LAT_PACKS_SM={6.5:90,9:65,12:50,15:40,18:35,21:35,24:30,27:25,30:20};
+var SKL_FILM_SM={6.5:90,9:65,12:50,15:40,18:35,21:35,24:30,27:25,30:20,35:20,40:20};
 var SKL_PINE_SM={6:30,9:30,12:50,15:40,18:35,21:35,24:30,27:25,30:20};
 
-var ESTPLY={
+// Sheet areas (m²)
+var SHEET_AREAS={
+  'sm':1.22*2.44,
+  'lg':1.525*3.05,
+  'maxi_1250_3340':1.25*3.34,
+  'maxi_1250_3660':1.25*3.66,
+  'maxi_1525_3340':1.525*3.34,
+  'maxi_1525_3660':1.525*3.66,
+  'maxi_2150_3050':2.15*3.05,
+  'maxi_2150_3300':2.15*3.30,
+  'maxi_2150_4000':2.15*4.00,
+  'maxi_1830_3050':1.83*3.05,
+  'maxi_1830_3340':1.83*3.34,
+  'maxi_1830_3660':1.83*3.66,
+  'maxi_1830_4000':1.83*4.00,
+  'tex4k_1500':1.50*4.00,
+  'tex4k_1200':1.20*4.00
+};
+
+// ESTply EUR/m² — Q4 2025 1220×2440
+var EST={
   sm:{
     sbb: {6.5:13.17,9:13.84,12:16.02,15:18.77,18:21.45,21:25.03,24:28.60,27:32.18,30:35.75},
-    bbbb:{6.5:10.03,9:11.49,12:14.56,15:16.92,18:19.15,21:22.35,24:25.54,27:28.73,30:31.92},
+    bbbb:{6.5:10.03,9:11.49,12:14.56,15:16.92,18:19.15,21:22.35,24:25.54,27:28.73,30:31.92,50:null},
     form:{9:12.59,12:14.57,15:17.08,18:19.52,21:22.77,24:26.02,27:29.28,30:32.53},
     deck:{9:12.98,12:15.02,15:17.61,18:20.12,21:23.47,24:26.83,27:30.18,30:33.53}
   },
@@ -210,8 +371,11 @@ var ESTPLY={
     deck:{9:14.42,12:16.69,15:19.56,18:22.36,21:26.08,24:29.81,27:33.53,30:37.26}
   }
 };
+// ESTply 50mm BB/BB: €1220/m³ — convert to €/m² for 1220×2440
+EST.sm.bbbb[50]=(1220*(0.050*1.22*2.44)).toFixed(4)*1; // €/m²
 
-var LATVIA={
+// Latvia GBP/m³ — Q1 2025 (sm) / Q3 2025 (lg)
+var LAT={
   sm:{
     bbbb:{6.5:1486,9:1239,12:1069,15:1010,18:975,21:975,24:975,27:975,30:1021},
     bbwg:{6.5:1411,9:1177,12:1015,15:960,18:927,21:927,24:927,27:927,30:970},
@@ -221,7 +385,11 @@ var LATVIA={
     hbrn:{6.5:1728,9:1381,12:1203,15:1104,18:1045,21:1051,24:1033,27:1007,30:1006},
     hblk:{6.5:1863,9:1445,12:1278,15:1136,18:1109,21:1077,24:1058,27:1028,30:1023},
     hslv:{6.5:2593,9:2059,12:1655,15:1385,18:1317,21:1257,24:1216,27:1166,30:1149},
-    hslvdb:{9:1534,12:1366,15:1234,18:1161,21:1126,24:1120,27:1112,30:1122}
+    hslvdb:{9:1534,12:1366,15:1234,18:1161,21:1126,24:1120,27:1112,30:1122},
+    mel:{6.5:2260,12:1484,15:1260,18:1185},
+    lac1:{6.5:1554,9:1314,12:1162,15:1110,18:1058,24:1037},
+    lac2:{6.5:1785,9:1481,12:1287,15:1210,18:1141,24:1100},
+    fstrip:{12:2126,15:1836,18:1690}
   },
   lg:{
     bbbb:{6.5:1811,9:1425,12:1229,15:1162,18:1122,21:1122,24:1122,27:1122,30:1174},
@@ -233,10 +401,24 @@ var LATVIA={
     hblk:{6.5:2142,9:1788,12:1470,15:1306,18:1275,21:1239,24:1217,27:1182,30:1176},
     hslv:{6.5:2982,9:2368,12:1903,15:1593,18:1515,21:1446,24:1398,27:1341,30:1321},
     hslvdb:{9:1764,12:1571,15:1419,18:1335,21:1295,24:1288,27:1279,30:1290}
+  },
+  // Maxi base prices GBP/m³ — Q3 2023 (flag as estimate)
+  maxi:{
+    bbbb:{6.5:1382,9:1197,12:1082,15:1053,18:1017,21:1017,24:1017,27:1017,30:1017,35:1056,40:1108,45:1157,50:1205},
+    bbwg:{6.5:1314,9:1137,12:1029,15:1000,18:968,21:968,24:968,27:968,30:968,35:1003,40:1052,45:1097,50:1145},
+    wgwg:{6.5:1244,9:1077,12:973,15:947,18:916,21:916,24:916,27:916,30:916,35:950,40:996,45:1040,50:1085},
+    form:{6.5:1861,9:1551,12:1282,15:1232,18:1163,21:1152,24:1165,27:1131,30:1127,35:1144,40:1230,45:1257,50:1306},
+    deck:{6.5:1928,9:1615,12:1327,15:1265,18:1209,21:1187,24:1176,27:1143,30:1142,35:1164,40:1260,45:1290,50:1336}
+  },
+  // Riga Tex 4000mm 120g only GBP/m³
+  tex4k:{
+    '1500x4000':{30:1330},
+    '1200x4000':{30:1652}
   }
 };
 
-var SKLEJKA={
+// Sklejka EUR/m³
+var SKL={
   pi2: {6:1590,9:1395,12:1290,15:1180,18:1180,21:1180,24:1180,27:1190,30:1210},
   pii2:{6:1505,9:1320,12:1220,15:1120,18:1120,21:1120,24:1120,27:1130,30:1145},
   film:{6.5:1750,9:1500,12:1280,15:1125,18:1070,21:1070,24:1080,27:1090,30:1100,35:1130,40:1160},
@@ -244,180 +426,492 @@ var SKLEJKA={
   hbrn:{9:1710,12:1460,15:1320,18:1300,21:1300,24:1310,27:1320,30:1330}
 };
 
-var FAM={
-  birch:{thk:[6.5,9,12,15,18,21,24,27,30],grades:{
-    bbbb:{l:'BB/BB',n:'',ek:'bbbb',lk:'bbbb',sk:null,st:null,sm:1},
-    sbb: {l:'S/BB',n:'ESTply only',ek:'sbb',lk:null,sk:null,st:null,sm:1},
-    bbwg:{l:'BB/WG',n:'Latvia only',ek:null,lk:'bbwg',sk:null,st:null,sm:1},
-    wgwg:{l:'WG/WG',n:'Latvia only',ek:null,lk:'wgwg',sk:null,st:null,sm:1}
-  }},
-  pine:{thk:[6,9,12,15,18,21,24,27,30],grades:{
-    pi2: {l:'Pine I/II',n:'Sklejka only',ek:null,lk:null,sk:'pi2',st:'pine',sm:1},
-    pii2:{l:'Pine II/II',n:'Sklejka only',ek:null,lk:null,sk:'pii2',st:'pine',sm:1}
-  }},
-  film:{thk:[6.5,9,12,15,18,21,24,27,30,35,40],grades:{
-    fgrp:{l:'Form / RigaForm / Film-Film',n:'ESTply Form \xB7 Latvia RigaForm \xB7 Sklejka Film/Film',ek:'form',lk:'form',sk:'film',st:'film',sm:1},
-    tgrp:{l:'Tex / Wiremesh / Deck',n:'ESTply Deck \xB7 Latvia RigaTex \xB7 Sklejka Wiremesh',ek:'deck',lk:'deck',sk:'wire',st:'film',sm:1},
-    hbrn:{l:'Hexa \u2014 Brown',n:'Latvia Heksa Plus \xB7 Sklejka HEXA Brown',ek:null,lk:'hbrn',sk:'hbrn',st:'film',sm:1},
-    hblk:{l:'Hexa \u2014 Black',n:'Latvia Heksa Plus \xB7 Sklejka HEXA Black (+2%)',ek:null,lk:'hblk',sk:'hbrn',st:'film',sm:1.02},
-    hslv:{l:'Hexa \u2014 Silver Grey',n:'Latvia Heksa Plus only',ek:null,lk:'hslv',sk:null,st:null,sm:1},
-    hslvdb:{l:'Hexa \u2014 Silver Grey / Dark Brown',n:'Latvia Heksa Plus only',ek:null,lk:'hslvdb',sk:null,st:null,sm:1}
-  }}
+// Maxi size groups: standard vs +5%
+var MAXI_PLUS5=['maxi_2150_3050','maxi_2150_3300','maxi_2150_4000','maxi_1830_3050','maxi_1830_3340','maxi_1830_3660','maxi_1830_4000'];
+
+// ── GRADE / FAMILY CONFIG ─────────────────────────────────────────────────
+// Each grade: l=SPP label, ek/lk/sk=data key or null, st=skl pack type, sm=skl multiplier
+// sizes: which size groups apply
+var FAM_CONFIG={
+  'Birch':{
+    sizes:['sm','lg'],
+    thk:[6.5,9,12,15,18,21,24,27,30],
+    grades:{
+      bbbb:{l:'Birch BB/BB',ek:'bbbb',lk:'bbbb',sk:null},
+      sbb: {l:'Birch S/BB', ek:'sbb', lk:null,  sk:null},
+      bbwg:{l:'Birch BB/WG',ek:null,  lk:'bbwg',sk:null},
+      wgwg:{l:'Birch WG/WG',ek:null,  lk:'wgwg',sk:null}
+    }
+  },
+  'Birch 50mm':{
+    sizes:['sm'],
+    thk:[50],
+    grades:{
+      bbbb50:{l:'Birch BB/BB',ek:'bbbb',lk:null,sk:null}
+    }
+  },
+  'Pine':{
+    sizes:['sm'],
+    thk:[6,9,12,15,18,21,24,27,30],
+    grades:{
+      pi2: {l:'Pine I/II', ek:null,lk:null,sk:'pi2', st:'pine',sm:1},
+      pii2:{l:'Pine II/II',ek:null,lk:null,sk:'pii2',st:'pine',sm:1}
+    }
+  },
+  'Film / Tex / Form':{
+    sizes:['sm','lg'],
+    thk:[6.5,9,12,15,18,21,24,27,30,35,40],
+    grades:{
+      form:{l:'Smooth / Smooth',    ek:'form',lk:'form',sk:'film',st:'film',sm:1},
+      deck:{l:'Mesh / Smooth',      ek:'deck',lk:'deck',sk:'wire',st:'film',sm:1},
+      hbrn:{l:'Dark Brown Hexa',    ek:null,  lk:'hbrn',sk:'hbrn',st:'film',sm:1},
+      hblk:{l:'Black Hexa',         ek:null,  lk:'hblk',sk:'hbrn',st:'film',sm:1.02},
+      hslv:{l:'Silver Grey Hexa',   ek:null,  lk:'hslv',sk:null,  st:null,  sm:1},
+      hslvdb:{l:'Silver Grey Hexa DB Reverse',ek:null,lk:'hslvdb',sk:null,st:null,sm:1}
+    }
+  },
+  'Maxi Panels':{
+    sizes:['maxi_1250_3340','maxi_1250_3660','maxi_1525_3340','maxi_1525_3660','maxi_2150_3050','maxi_2150_3300','maxi_2150_4000','maxi_1830_3050','maxi_1830_3340','maxi_1830_3660','maxi_1830_4000'],
+    thk:[6.5,9,12,15,18,21,24,27,30,35,40,45,50],
+    grades:{
+      bbbb:{l:'Birch BB/BB',  ek:null,lk:'bbbb',sk:null},
+      bbwg:{l:'Birch BB/WG',  ek:null,lk:'bbwg',sk:null},
+      wgwg:{l:'Birch WG/WG',  ek:null,lk:'wgwg',sk:null},
+      form:{l:'Smooth / Smooth',ek:null,lk:'form',sk:null},
+      deck:{l:'Mesh / Smooth', ek:null,lk:'deck',sk:null}
+    }
+  },
+  'Riga Tex 4000mm':{
+    sizes:['tex4k_1500','tex4k_1200'],
+    thk:[30],
+    grades:{
+      deck4k:{l:'Mesh / Smooth 120g',ek:null,lk:'deck',sk:null,tex4k:true}
+    }
+  },
+  'Clear Coated (Mel)':{
+    sizes:['sm'],
+    thk:[6.5,12,15,18],
+    grades:{
+      mel:{l:'Clear Coated',ek:null,lk:'mel',sk:null}
+    }
+  },
+  'Lacquer':{
+    sizes:['sm'],
+    thk:[6.5,9,12,15,18,24],
+    grades:{
+      lac1:{l:'Lacquer 1 Face (L-BB/BB)',ek:null,lk:'lac1',sk:null},
+      lac2:{l:'Lacquer 2 Face (L-BB/L-BB)',ek:null,lk:'lac2',sk:null}
+    }
+  },
+  'Fine Strip':{
+    sizes:['sm'],
+    thk:[12,15,18],
+    grades:{
+      fstrip:{l:'Fine Strip (Riga Decor)',ek:null,lk:'fstrip',sk:null}
+    }
+  }
+};
+
+var SIZE_LABELS={
+  sm:'1220\xD72440',lg:'1525\xD73050',
+  maxi_1250_3340:'1250\xD73340',maxi_1250_3660:'1250\xD73660',
+  maxi_1525_3340:'1525\xD73340',maxi_1525_3660:'1525\xD73660',
+  maxi_2150_3050:'2150\xD73050 (+5%)',maxi_2150_3300:'2150\xD73300 (+5%)',maxi_2150_4000:'2150\xD74000 (+5%)',
+  maxi_1830_3050:'1830\xD73050 (+5%)',maxi_1830_3340:'1830\xD73340 (+5%)',
+  maxi_1830_3660:'1830\xD73660 (+5%)',maxi_1830_4000:'1830\xD74000 (+5%)',
+  tex4k_1500:'1500\xD74000',tex4k_1200:'1200\xD74000'
 };
 
 var CF=6.5,RPP=7,SC=4.43;
+var curSize='sm',curFam='Birch',curSupBuilder='est';
+
 function G(v){return '\xA3'+v.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function E(v){return '\u20AC'+v.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function gM2(sz){return SHEET_AREAS[sz]||SHEET_AREAS.sm;}
+function isPlus5(sz){return MAXI_PLUS5.indexOf(sz)>=0;}
+function isTex4k(sz){return sz.indexOf('tex4k')===0;}
 
-function calcE(t,gc,n,r){
-  if(!gc.ek) return null;
-  var pm2=(ESTPLY[curSize][gc.ek]||{})[t]; if(pm2==null) return null;
-  var m2=sheetM2();
-  var spp;
-  if(curSize==='sm'){
-    spp=EST_SM[t]; if(!spp) return null;
-  } else {
-    spp=parseInt(document.getElementById('spp_est_lg').value)||20;
+function getPpm3LAT(fk,gk,thk,sz){
+  // Maxi
+  if(sz.indexOf('maxi')===0){
+    var base=(LAT.maxi[gk]||{})[thk];
+    if(base==null) return null;
+    return isPlus5(sz)?base*1.05:base;
   }
-  var sh=n*spp,m3v=sh*(t/1000)*m2,m2v=sh*m2,ce=pm2*m2v,cg=ce/r,cc=CF*m3v,rc=n*RPP,tot=cg+cc+rc;
-  return{lbl:'ESTply',tag:'est',s:spp,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:(pm2*m2)/r,
-    cl:'<strong>'+E(pm2)+'/m\xB2</strong> &rarr; '+G(pm2/r)+'/m\xB2 at current rate',
-    rows:[['CIF ('+E(ce)+' &divide; '+r.toFixed(4)+')',G(cg)],
-          ['Customs+collection (&pound;'+CF+'/m\xB3 &times; '+m3v.toFixed(3)+'m\xB3)',G(cc)],
-          ['Receiving ('+n+' pack'+(n>1?'s':'')+' &times; &pound;'+RPP+')',G(rc)]]};
-}
-
-function calcL(t,gc,n){
-  if(!gc.lk) return null;
-  var pm3=(LATVIA[curSize][gc.lk]||{})[t]; if(pm3==null) return null;
-  var m2=sheetM2();
-  var spp;
-  if(curSize==='sm'){
-    spp=LAT_SM[t]; if(!spp) return null;
-  } else {
-    spp=parseInt(document.getElementById('spp_lat_lg').value)||15;
+  // Tex 4k
+  if(isTex4k(sz)){
+    var wkey=sz==='tex4k_1500'?'1500x4000':'1200x4000';
+    return (LAT.tex4k[wkey]||{})[thk]||null;
   }
-  var sh=n*spp,m3v=sh*(t/1000)*m2,base=pm3*m3v,tr=8*m3v,sub=base+tr,sur=sub*(SC/100),cif=sub+sur;
-  var cc=CF*m3v,rc=n*RPP,tot=cif+cc+rc;
-  return{lbl:'Latvijas Finieris',tag:'lat',s:spp,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:cif/sh,
-    cl:'<strong>'+G(pm3)+'/m\xB3</strong> base &rarr; '+G((pm3+8)*(1+SC/100))+'/m\xB3 inc. surcharge',
-    rows:[['CIF base ('+G(pm3)+'/m\xB3)',G(base)],['Transport (&pound;8/m\xB3)',G(tr)],
-          ['Surcharge ('+SC+'%)',G(sur)],
-          ['Customs+collection (&pound;'+CF+'/m\xB3 &times; '+m3v.toFixed(3)+'m\xB3)',G(cc)],
-          ['Receiving ('+n+' pack'+(n>1?'s':'')+' &times; &pound;'+RPP+')',G(rc)]]};
+  var band=sz==='lg'?'lg':'sm';
+  return (LAT[band][gk]||{})[thk]||null;
 }
 
-function calcS(t,gc,n,r){
-  if(!gc.sk||curSize==='lg') return null;
-  var raw=(SKLEJKA[gc.sk]||{})[t]; if(raw==null) return null;
-  var pm3=raw*(gc.sm||1),m2=sheetM2();
-  var spp=(gc.st==='pine'?SKL_PINE_SM:SKL_FILM_SM)[t]; if(!spp) return null;
-  var sh=n*spp,m3v=sh*(t/1000)*m2,ce=pm3*m3v,cg=ce/r,cc=50,rc=n*RPP,tot=cg+cc+rc;
-  var mn=gc.sm>1?' (+'+Math.round((gc.sm-1)*100)+'% black)':'';
-  return{lbl:'Sklejka Multi',tag:'skl',s:spp,sh:sh,m3:m3v,tot:tot,psl:tot/sh,pcif:cg/sh,
-    cl:'<strong>'+E(pm3)+'/m\xB3</strong>'+mn+' &rarr; '+G(pm3/r)+'/m\xB3 at current rate',
-    rows:[['CIF ('+E(ce)+' &divide; '+r.toFixed(4)+')',G(cg)],
-          ['Customs (&pound;50 flat)',G(cc)],
-          ['Receiving ('+n+' pack'+(n>1?'s':'')+' &times; &pound;'+RPP+')',G(rc)]]};
+function getPpm2EST(fk,gk,thk,sz){
+  if(sz.indexOf('maxi')===0||isTex4k(sz)) return null;
+  var band=sz==='lg'?'lg':'sm';
+  return (EST[band][gk]||{})[thk]||null;
 }
 
-function renderCard(res,n,win){
-  if(!res){
-    var msg=curSize==='lg'&&!res?'Not available at 1525&times;3050 for this supplier/grade':'This supplier does not offer this grade';
-    return '<div class="result-card na"><div class="rc-price" style="font-size:22px;color:var(--text3)">N/A</div>'
-      +'<div class="rc-price-sub">Not available</div><hr class="rc-divider"><div class="rc-na">'+msg+'</div></div>';
+function getPpm3SKL(gc,thk){
+  if(!gc.sk) return null;
+  var base=(SKL[gc.sk]||{})[thk];
+  if(base==null) return null;
+  return base*(gc.sm||1);
+}
+
+function packSM(sup,gc,thk){
+  if(sup==='est') return EST_PACKS_SM[thk]||null;
+  if(sup==='lat') return LAT_PACKS_SM[thk]||null;
+  return (gc.st==='pine'?SKL_PINE_SM:SKL_FILM_SM)[thk]||null;
+}
+
+// ── CALC FUNCTIONS ────────────────────────────────────────────────────────
+function calcRow(sup,fk,gk,sz,thk,packs,rate,sppLg){
+  var gc=FAM_CONFIG[fk].grades[gk];
+  if(!gc) return null;
+  var m2=gM2(sz);
+  var spp,pm3_gbp=null,pm2_eur=null,isEur=false;
+
+  if(sup==='est'){
+    pm2_eur=getPpm2EST(fk,gk,thk,sz);
+    if(pm2_eur==null) return null;
+    spp=(sz==='sm'||sz==='lg')?(sz==='sm'?packSM('est',gc,thk):(sppLg||20)):null;
+    if(!spp) return null;
+    isEur=true;
+  } else if(sup==='lat'){
+    pm3_gbp=getPpm3LAT(fk,gk,thk,sz);
+    if(pm3_gbp==null) return null;
+    // Special pack sizes for certain products
+    var fstrip=gk==='fstrip',mel=gk==='mel',lac=gk==='lac1'||gk==='lac2';
+    if(sz==='sm'){
+      if(fstrip){spp=thk===12?30:35;}
+      else if(mel||lac){spp=LAT_PACKS_SM[thk]||null;}
+      else{spp=packSM('lat',gc,thk);}
+    } else if(sz==='lg'){spp=sppLg||15;}
+    else {spp=15;} // maxi/tex4k — user adjustable
+    if(!spp) return null;
+  } else if(sup==='skl'){
+    var pm3_eur=getPpm3SKL(gc,thk);
+    if(pm3_eur==null) return null;
+    if(sz!=='sm') return null;
+    spp=packSM('skl',gc,thk);
+    if(!spp) return null;
+    isEur=true;
+    // Convert EUR/m³ to GBP/m³ equivalent for cost calc
+    var sh2=packs*spp,m3v2=sh2*(thk/1000)*m2,m2v2=sh2*m2;
+    var cifE2=pm3_eur*m3v2,cifG2=cifE2/rate,cc2=50,rc2=packs*RPP,tot2=cifG2+cc2+rc2;
+    return{sup:'skl',spp:spp,sheets:sh2,m3:m3v2,tot:tot2,
+      psl:tot2/sh2,pcif:cifG2/sh2,
+      cifLine:'<strong>'+E(pm3_eur)+'/m\xB3'+(gc.sm>1?' (+'+Math.round((gc.sm-1)*100)+'% black)':'')+'</strong> \u2192 '+G(pm3_eur/rate)+'/m\xB3',
+      rows:[['CIF ('+E(cifE2)+' \xF7 '+rate.toFixed(4)+')',G(cifG2)],
+            ['Customs (\xA350 flat)',G(cc2)],
+            ['Receiving ('+packs+' \xD7 \xA3'+RPP+')',G(rc2)]]};
   }
-  var rows=res.rows.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>';}).join('');
-  return '<div class="result-card'+(win?' winner':'')+'">'
-    +'<div class="rc-header"><span class="rc-name">'+res.lbl+'</span><span class="rc-tag tag-'+res.tag+'">'+res.tag.toUpperCase()+'</span></div>'
-    +'<div class="rc-packs">'+res.s+' sheets/pack &nbsp;&middot;&nbsp; '+n+' pack'+(n>1?'s':'')+' = '+res.sh+' sheets</div>'
-    +'<div class="rc-price">'+G(res.psl)+'</div>'
-    +'<div class="rc-price-sub">per sheet landed &nbsp;&middot;&nbsp; CIF only: '+G(res.pcif)+'/sheet</div>'
-    +(win?'<div class="winner-pill">&#10003; Cheapest per sheet</div>':'')
-    +'<hr class="rc-divider"><div class="rc-cif">'+res.cl+'</div>'
-    +'<table class="rc-breakdown">'+rows
-    +'<tr class="total"><td>Order total &nbsp;&middot;&nbsp; '+res.sh+' sheets &nbsp;&middot;&nbsp; '+res.m3.toFixed(3)+' m&sup3;</td><td>'+G(res.tot)+'</td></tr>'
-    +'</table></div>';
-}
 
-function renderLgPackInputs(){
-  var ex=document.getElementById('lg-pack-inputs');
-  if(!ex){
-    var div=document.createElement('div');
-    div.id='lg-pack-inputs';
-    div.style.cssText='margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:14px;';
-    div.innerHTML='<div class="field"><label>Sheets/pack — ESTply (1525&times;3050)</label>'
-      +'<input type="number" id="spp_est_lg" value="20" min="1" step="1"></div>'
-      +'<div class="field"><label>Sheets/pack — Latvia (1525&times;3050)</label>'
-      +'<input type="number" id="spp_lat_lg" value="15" min="1" step="1"></div>';
-    document.querySelector('.params-card').appendChild(div);
-    ['spp_est_lg','spp_lat_lg'].forEach(function(id){
-      document.getElementById(id).addEventListener('input',update);
-    });
+  if(sup==='est'&&isEur){
+    var sh=packs*spp,m3v=sh*(thk/1000)*m2,m2v=sh*m2;
+    var cifE=pm2_eur*m2v,cifG=cifE/rate,cc=CF*m3v,rc=packs*RPP,tot=cifG+cc+rc;
+    return{sup:'est',spp:spp,sheets:sh,m3:m3v,tot:tot,
+      psl:tot/sh,pcif:(pm2_eur*m2)/rate,
+      cifLine:'<strong>'+E(pm2_eur)+'/m\xB2</strong> \u2192 '+G(pm2_eur/rate)+'/m\xB2',
+      rows:[['CIF ('+E(cifE)+' \xF7 '+rate.toFixed(4)+')',G(cifG)],
+            ['Customs+coll (\xA3'+CF+'/m\xB3 \xD7 '+m3v.toFixed(3)+')',G(cc)],
+            ['Receiving ('+packs+' \xD7 \xA3'+RPP+')',G(rc)]]};
   }
-  document.getElementById('lg-pack-inputs').style.display='grid';
-}
-function hideLgPackInputs(){
-  var ex=document.getElementById('lg-pack-inputs');
-  if(ex) ex.style.display='none';
+
+  if(sup==='lat'){
+    var sh=packs*spp,m3v=sh*(thk/1000)*m2;
+    var base=pm3_gbp*m3v,tr=8*m3v,sub=base+tr,sur=sub*(SC/100),cif=sub+sur;
+    var maxi_stale=sz.indexOf('maxi')===0;
+    var cc=CF*m3v,rc=packs*RPP,tot=cif+cc+rc;
+    return{sup:'lat',spp:spp,sheets:sh,m3:m3v,tot:tot,
+      psl:tot/sh,pcif:cif/sh,maxi_stale:maxi_stale,
+      cifLine:'<strong>'+G(pm3_gbp)+'/m\xB3'+(isPlus5(sz)?' (+5% size)':'')+'</strong> \u2192 '+G((pm3_gbp+8)*(1+SC/100))+'/m\xB3 inc. surcharge',
+      rows:[['CIF base ('+G(pm3_gbp)+'/m\xB3)',G(base)],
+            ['Transport (\xA38/m\xB3)',G(tr)],
+            ['Surcharge ('+SC+'%)',G(sur)],
+            ['Customs+coll (\xA3'+CF+'/m\xB3 \xD7 '+m3v.toFixed(3)+')',G(cc)],
+            ['Receiving ('+packs+' \xD7 \xA3'+RPP+')',G(rc)]]};
+  }
+  return null;
 }
 
-function buildGradeSelect(){
-  var gs=document.getElementById('grade');gs.innerHTML='';
-  Object.keys(FAM[curFam].grades).forEach(function(k){
-    var g=FAM[curFam].grades[k],o=document.createElement('option');
-    o.value=k;o.textContent=g.l+(g.n?' \u2014 '+g.n:'');gs.appendChild(o);
+// ── MODE SWITCHING ────────────────────────────────────────────────────────
+function setMode(m){
+  document.getElementById('compare-mode').style.display=m==='compare'?'block':'none';
+  document.getElementById('builder-mode').style.display=m==='builder'?'block':'none';
+  document.getElementById('tab-compare').className='mode-tab'+(m==='compare'?' active':'');
+  document.getElementById('tab-builder').className='mode-tab'+(m==='builder'?' active':'');
+}
+
+// ── COMPARE MODE ──────────────────────────────────────────────────────────
+function initCompare(){
+  var famSel=document.getElementById('c-family');
+  famSel.innerHTML='';
+  Object.keys(FAM_CONFIG).forEach(function(f){
+    var o=document.createElement('option');o.value=f;o.textContent=f;famSel.appendChild(o);
+  });
+  famSel.addEventListener('change',function(){rebuildCompareSels();updateCompare();});
+  document.getElementById('c-grade').addEventListener('change',function(){buildCThk();buildCSizeToggle();updateCompare();});
+  document.getElementById('c-thickness').addEventListener('change',updateCompare);
+  ['c-pe','c-pl','c-ps','c-rate','c-spp-est','c-spp-lat'].forEach(function(id){
+    document.getElementById(id).addEventListener('input',updateCompare);
+  });
+  rebuildCompareSels();
+}
+
+function rebuildCompareSels(){
+  buildCGrade();buildCThk();buildCSizeToggle();updateCompare();
+}
+
+function buildCGrade(){
+  var gs=document.getElementById('c-grade');gs.innerHTML='';
+  var fam=FAM_CONFIG[document.getElementById('c-family').value];
+  Object.keys(fam.grades).forEach(function(k){
+    var o=document.createElement('option');o.value=k;o.textContent=fam.grades[k].l;gs.appendChild(o);
   });
 }
-function buildThicknessSelect(){
-  var ts=document.getElementById('thickness'),cur=parseFloat(ts.value);ts.innerHTML='';
-  FAM[curFam].thk.forEach(function(t){
+function buildCThk(){
+  var ts=document.getElementById('c-thickness'),cur=parseFloat(ts.value);ts.innerHTML='';
+  var fam=FAM_CONFIG[document.getElementById('c-family').value];
+  fam.thk.forEach(function(t){
     var o=document.createElement('option');o.value=t;o.textContent=t+'mm';
     if(t===cur)o.selected=true;ts.appendChild(o);
   });
 }
-function update(){
-  var gk=document.getElementById('grade').value;
-  var t=parseFloat(document.getElementById('thickness').value);
-  var r=parseFloat(document.getElementById('gbpeur').value)||1.1555;
-  var pe=parseInt(document.getElementById('packs_est').value)||1;
-  var pl=parseInt(document.getElementById('packs_lat').value)||1;
-  var ps=parseInt(document.getElementById('packs_skl').value)||1;
-  var gc=FAM[curFam].grades[gk];if(!gc)return;
-  if(curSize==='lg')renderLgPackInputs();else hideLgPackInputs();
-  var eR=calcE(t,gc,pe,r),lR=calcL(t,gc,pl),sR=calcS(t,gc,ps,r);
-  var av=[{r:eR,n:pe},{r:lR,n:pl},{r:sR,n:ps}].filter(function(x){return x.r!==null;});
+function buildCSizeToggle(){
+  var wrap=document.getElementById('c-size-toggle');wrap.innerHTML='';
+  var fam=FAM_CONFIG[document.getElementById('c-family').value];
+  fam.sizes.forEach(function(sz,i){
+    var b=document.createElement('button');
+    b.textContent=SIZE_LABELS[sz]||sz;
+    if(i===0)b.className='active';
+    b.onclick=function(){
+      wrap.querySelectorAll('button').forEach(function(x){x.className='';});
+      b.className='active';
+      curSize=sz;
+      var isLg=sz==='lg'||sz.indexOf('maxi')===0||sz.indexOf('tex4k')===0;
+      document.getElementById('c-lg-packs').style.display=isLg?'grid':'none';
+      updateCompare();
+    };
+    wrap.appendChild(b);
+    if(i===0)curSize=sz;
+  });
+}
+
+function updateCompare(){
+  var fk=document.getElementById('c-family').value;
+  var gk=document.getElementById('c-grade').value;
+  var thk=parseFloat(document.getElementById('c-thickness').value);
+  var rate=parseFloat(document.getElementById('c-rate').value)||sppRate;
+  var pe=parseInt(document.getElementById('c-pe').value)||1;
+  var pl=parseInt(document.getElementById('c-pl').value)||1;
+  var ps=parseInt(document.getElementById('c-ps').value)||1;
+  var sppLgE=parseInt(document.getElementById('c-spp-est').value)||20;
+  var sppLgL=parseInt(document.getElementById('c-spp-lat').value)||15;
+  var sz=curSize;
+
+  var eR=calcRow('est',fk,gk,sz,thk,pe,rate,sppLgE);
+  var lR=calcRow('lat',fk,gk,sz,thk,pl,rate,sppLgL);
+  var sR=calcRow('skl',fk,gk,sz,thk,ps,rate,null);
+
+  var av=[{r:eR,n:pe,lbl:'ESTply',tag:'est'},{r:lR,n:pl,lbl:'Latvijas Finieris',tag:'lat'},{r:sR,n:ps,lbl:'Sklejka Multi',tag:'skl'}].filter(function(x){return x.r!==null;});
   var wp=av.length?Math.min.apply(null,av.map(function(x){return x.r.psl;})):null;
-  document.getElementById('results').innerHTML=
-    [{r:eR,n:pe},{r:lR,n:pl},{r:sR,n:ps}].map(function(x){
-      var w=x.r&&av.length>1&&Math.abs(x.r.psl-wp)<0.005;
-      return renderCard(x.r,x.n,w);
-    }).join('');
-  var vd=document.getElementById('verdict');
+
+  var html=[{r:eR,n:pe,lbl:'ESTply',tag:'est'},{r:lR,n:pl,lbl:'Latvijas Finieris',tag:'lat'},{r:sR,n:ps,lbl:'Sklejka Multi',tag:'skl'}].map(function(x){
+    var win=x.r&&av.length>1&&Math.abs(x.r.psl-wp)<0.005;
+    return renderCCard(x.r,x.n,x.lbl,x.tag,win);
+  }).join('');
+  document.getElementById('c-results').innerHTML=html;
+
+  var vd=document.getElementById('c-verdict');
+  var staleNote=lR&&lR.maxi_stale?'<span class="stale-badge">Maxi prices Q3 2023 — indicative only</span>':'';
   if(!av.length){
     vd.innerHTML='<span class="verdict-main" style="color:var(--text3)">No data for this combination</span>';
   } else if(av.length===1){
-    vd.innerHTML='<span class="verdict-main">'+av[0].r.lbl+' only</span>'
-      +'<span class="verdict-sep">&middot;</span>'
-      +'<span class="verdict-sub">'+G(av[0].r.psl)+' per sheet landed</span>';
+    vd.innerHTML='<span class="verdict-main">'+av[0].lbl+' only</span><span class="verdict-sep">&middot;</span><span class="verdict-sub">'+G(av[0].r.psl)+'/sheet landed'+staleNote+'</span>';
   } else {
     var win=av.reduce(function(a,b){return a.r.psl<=b.r.psl?a:b;});
     var nxt=av.filter(function(x){return x!==win;}).reduce(function(a,b){return a.r.psl<=b.r.psl?a:b;});
     var sv=nxt.r.psl-win.r.psl,pct=(sv/nxt.r.psl*100).toFixed(1);
-    vd.innerHTML='<span class="verdict-main">'+win.r.lbl+' is cheapest per sheet</span>'
-      +'<span class="verdict-sep">&middot;</span>'
-      +'<span class="verdict-sub">Saving <span class="hl">'+G(sv)+'/sheet</span> &nbsp;&middot;&nbsp; '+pct+'% vs next cheapest</span>';
+    vd.innerHTML='<span class="verdict-main">'+win.lbl+' is cheapest per sheet</span><span class="verdict-sep">&middot;</span><span class="verdict-sub">Saving <span class="hl">'+G(sv)+'/sheet</span> &nbsp;&middot;&nbsp; '+pct+'% vs next cheapest</span>'+staleNote;
   }
 }
-document.getElementById('family').addEventListener('change',function(){
-  curFam=this.value;buildGradeSelect();buildThicknessSelect();update();
-});
-document.getElementById('grade').addEventListener('change',update);
-document.getElementById('thickness').addEventListener('change',update);
-['gbpeur','packs_est','packs_lat','packs_skl'].forEach(function(id){
-  document.getElementById(id).addEventListener('input',update);
-  document.getElementById(id).addEventListener('change',update);
-});
+
+function renderCCard(res,n,lbl,tag,win){
+  if(!res){
+    return '<div class="result-card na"><div class="rc-name">'+lbl+'</div><div class="rc-price" style="font-size:22px;color:var(--text3)">N/A</div><hr class="rc-divider"><div class="rc-na">Not available for this grade/size</div></div>';
+  }
+  var rows=res.rows.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>';}).join('');
+  return '<div class="result-card'+(win?' winner':'')+'">'
+    +'<div class="rc-header"><span class="rc-name">'+lbl+'</span><span class="rc-tag tag-'+tag+'">'+tag.toUpperCase()+'</span></div>'
+    +'<div class="rc-packs">'+res.spp+' sheets/pack &middot; '+n+' pack'+(n>1?'s':'')+' = '+res.sheets+' sheets</div>'
+    +'<div class="rc-price">'+G(res.psl)+'</div>'
+    +'<div class="rc-price-sub">per sheet landed &middot; CIF only: '+G(res.pcif)+'/sheet</div>'
+    +(win?'<div class="winner-pill">&#10003; Cheapest per sheet</div>':'')
+    +'<hr class="rc-divider"><div class="rc-cif">'+res.cifLine+'</div>'
+    +'<table class="rc-breakdown">'+rows
+    +'<tr class="total"><td>Order total &middot; '+res.sheets+' sheets &middot; '+res.m3.toFixed(3)+'m\xB3</td><td>'+G(res.tot)+'</td></tr>'
+    +'</table></div>';
+}
+
+// ── LOAD BUILDER ──────────────────────────────────────────────────────────
+var bRows=[];
+var ROW_ID=0;
+
+function initBuilder(){
+  document.getElementById('b-rate').addEventListener('input',updateBuilder);
+  document.getElementById('b-target').addEventListener('input',updateBuilder);
+  addRow();
+}
+
+function setBuilderSupplier(sup){
+  curSupBuilder=sup;
+  ['est','lat','skl'].forEach(function(s){
+    var btn=document.getElementById('bsup-'+s);
+    btn.className='supplier-btn'+(sup===s?' active-'+s:'');
+  });
+  updateBuilder();
+}
+
+function addRow(){
+  var id=ROW_ID++;
+  var famKeys=Object.keys(FAM_CONFIG);
+  var fk=famKeys[0];
+  var gkeys=Object.keys(FAM_CONFIG[fk].grades);
+  var gk=gkeys[0];
+  var sz=FAM_CONFIG[fk].sizes[0];
+  var thk=FAM_CONFIG[fk].thk[0];
+  bRows.push({id:id,fk:fk,gk:gk,sz:sz,thk:thk,packs:1,sppOverride:null});
+  renderBuilderTable();
+  updateBuilder();
+}
+
+function removeRow(id){
+  bRows=bRows.filter(function(r){return r.id!==id;});
+  renderBuilderTable();
+  updateBuilder();
+}
+
+function clearBuilder(){
+  bRows=[];ROW_ID=0;
+  renderBuilderTable();
+  updateBuilder();
+}
+
+function renderBuilderTable(){
+  var tbody=document.getElementById('b-tbody');
+  if(!bRows.length){tbody.innerHTML='<tr><td colspan="11" style="text-align:center;padding:20px;color:var(--text3)">No lines added yet</td></tr>';return;}
+  tbody.innerHTML=bRows.map(function(row){return renderBRow(row);}).join('');
+  // Attach events
+  bRows.forEach(function(row){
+    var id=row.id;
+    var famSel=document.getElementById('bf'+id);
+    var gradeSel=document.getElementById('bg'+id);
+    var szSel=document.getElementById('bs'+id);
+    var thkSel=document.getElementById('bt'+id);
+    var packInp=document.getElementById('bp'+id);
+    var sppInp=document.getElementById('bspp'+id);
+    famSel.addEventListener('change',function(){
+      row.fk=this.value;
+      var fam=FAM_CONFIG[row.fk];
+      row.gk=Object.keys(fam.grades)[0];
+      row.sz=fam.sizes[0];
+      row.thk=fam.thk[0];
+      renderBuilderTable();updateBuilder();
+    });
+    gradeSel.addEventListener('change',function(){row.gk=this.value;updateBuilder();});
+    szSel.addEventListener('change',function(){row.sz=this.value;updateBuilder();});
+    thkSel.addEventListener('change',function(){row.thk=parseFloat(this.value);updateBuilder();});
+    packInp.addEventListener('input',function(){row.packs=parseInt(this.value)||1;updateBuilder();});
+    if(sppInp){sppInp.addEventListener('input',function(){row.sppOverride=parseInt(this.value)||null;updateBuilder();});}
+  });
+}
+
+function renderBRow(row){
+  var fam=FAM_CONFIG[row.fk];
+  var famOpts=Object.keys(FAM_CONFIG).map(function(f){return '<option value="'+f+'"'+(f===row.fk?' selected':'')+'>'+f+'</option>';}).join('');
+  var gradeOpts=Object.keys(fam.grades).map(function(k){return '<option value="'+k+'"'+(k===row.gk?' selected':'')+'>'+fam.grades[k].l+'</option>';}).join('');
+  var szOpts=fam.sizes.map(function(s){return '<option value="'+s+'"'+(s===row.sz?' selected':'')+'>'+SIZE_LABELS[s]+'</option>';}).join('');
+  var thkOpts=fam.thk.map(function(t){return '<option value="'+t+'"'+(t===row.thk?' selected':'')+'>'+t+'mm</option>';}).join('');
+  var needSppOverride=row.sz!=='sm';
+  var sppCell=needSppOverride
+    ?'<input class="inp-packs" type="number" id="bspp'+row.id+'" value="'+(row.sppOverride||15)+'" min="1" title="Sheets per pack">'
+    :'<span id="bspp'+row.id+'"></span>';
+  return '<tr id="brow'+row.id+'">'
+    +'<td><select class="sel-family" id="bf'+row.id+'">'+famOpts+'</select></td>'
+    +'<td><select class="sel-grade" id="bg'+row.id+'">'+gradeOpts+'</select></td>'
+    +'<td><select class="sel-size" id="bs'+row.id+'">'+szOpts+'</select></td>'
+    +'<td><select class="sel-thk" id="bt'+row.id+'">'+thkOpts+'</select></td>'
+    +'<td id="bspp-cell'+row.id+'">'+sppCell+'</td>'
+    +'<td><input class="inp-packs" type="number" id="bp'+row.id+'" value="'+row.packs+'" min="1"></td>'
+    +'<td class="cell-spp" id="bsheets'+row.id+'">—</td>'
+    +'<td class="cell-m3" id="bm3'+row.id+'">—</td>'
+    +'<td class="cell-price" id="bpsl'+row.id+'">—</td>'
+    +'<td class="cell-total" id="btot'+row.id+'">—</td>'
+    +'<td><button class="btn-remove" onclick="removeRow('+row.id+')">&#10005;</button></td>'
+    +'</tr>';
+}
+
+function updateBuilder(){
+  var rate=parseFloat(document.getElementById('b-rate').value)||sppRate;
+  var target=parseFloat(document.getElementById('b-target').value)||32;
+  var sup=curSupBuilder;
+  var totalM3=0,totalCost=0,validRows=0;
+
+  bRows.forEach(function(row){
+    var sppOv=row.sppOverride;
+    var res=calcRow(sup,row.fk,row.gk,row.sz,row.thk,row.packs,rate,sppOv||15);
+    var tr=document.getElementById('brow'+row.id);
+    if(!tr) return;
+    if(res){
+      tr.className='';
+      document.getElementById('bsheets'+row.id).textContent=res.sheets;
+      document.getElementById('bm3'+row.id).textContent=res.m3.toFixed(3);
+      document.getElementById('bpsl'+row.id).textContent=G(res.psl);
+      document.getElementById('btot'+row.id).textContent=G(res.tot);
+      // Show auto spp if sm
+      if(row.sz==='sm'){
+        var sppEl=document.getElementById('bspp'+row.id);
+        if(sppEl&&sppEl.tagName!=='INPUT') sppEl.textContent=res.spp;
+      }
+      totalM3+=res.m3;
+      totalCost+=res.tot;
+      validRows++;
+    } else {
+      tr.className='row-na';
+      ['bsheets','bm3','bpsl','btot'].forEach(function(p){
+        var el=document.getElementById(p+row.id);if(el)el.textContent='N/A';
+      });
+    }
+  });
+
+  // Summary bar
+  var pct=Math.min(totalM3/target*100,100);
+  var over=totalM3>target;
+  var sumHtml='<div class="load-m3-bar-wrap">'
+    +'<div class="load-m3-label">Load fill: '+totalM3.toFixed(3)+' m\xB3 of '+target+' m\xB3 target</div>'
+    +'<div class="load-m3-bar"><div class="load-m3-fill'+(over?' over':'')+'" style="width:'+pct+'%"></div></div>'
+    +'</div>'
+    +'<div class="load-stats">'
+    +'<div class="load-stat"><div class="load-stat-val">'+totalM3.toFixed(2)+'</div><div class="load-stat-lbl">Total m\xB3</div></div>'
+    +'<div class="load-stat"><div class="load-stat-val">'+G(totalCost)+'</div><div class="load-stat-lbl">Total cost</div></div>'
+    +'<div class="load-stat"><div class="load-stat-val">'+(target-totalM3>0?'+'+(target-totalM3).toFixed(2):over?'\u26A0 +'+((totalM3-target).toFixed(2))+' over':'Full')+'</div><div class="load-stat-lbl">'+(over?'Over target':'Remaining')+'</div></div>'
+    +'</div>';
+  document.getElementById('b-summary').innerHTML=sumHtml;
+}
+
+function printLoad(){
+  var sup={'est':'ESTply','lat':'Latvijas Finieris','skl':'Sklejka Multi'}[curSupBuilder];
+  document.getElementById('print-meta').innerHTML=
+    '<strong>'+sup+'</strong> &nbsp;&middot;&nbsp; '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})
+    +'<br>SPP buy rate: \u20AC'+sppRate.toFixed(4);
+  setMode('builder');
+  window.print();
+}
+
+document.getElementById('pw-input').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 </script>
 </body>
 </html>
