@@ -188,8 +188,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
 <div id="app">
   <div class="top-bar">
     <div class="top-logo">
-      <img src="https://lirp.cdn-website.com/c77bc2b8/dms3rep/multi/opt/Specialised-Panel-Products-Logo-9f2cae2a-360w.jpg" alt="SPP" onerror="this.outerHTML='<span style=\"font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.5px\">SPP</span>'">
-      <div class="top-logo-text">SPP Pricer <span>Supplier Cost Comparison</span></div>
+      <img id="spp-logo-top" src="./logo.png" alt="SPP" style="height:32px;filter:brightness(0) invert(1);opacity:0.95;" onerror="this.style.display='none';document.getElementById('spp-logo-text').style.display='block'">
+      <span id="spp-logo-text" style="display:none;font-size:16px;font-weight:700;color:#fff;letter-spacing:-0.5px;margin-right:4px;">SPP</span><div class="top-logo-text">SPP Pricer <span>Supplier Cost Comparison</span></div>
     </div>
     <div class="rate-bar">
       <div class="rate-info" id="rate-display">Loading rate...</div>
@@ -336,6 +336,7 @@ var EST_PACKS_SM={6.5:120,9:65,12:65,15:50,18:40,21:35,24:30,27:25,30:20,50:10};
 var LAT_PACKS_SM={6.5:90,9:65,12:50,15:40,18:35,21:35,24:30,27:25,30:20};
 var SKL_FILM_SM={6.5:90,9:65,12:50,15:40,18:35,21:35,24:30,27:25,30:20,35:20,40:20};
 var SKL_PINE_SM={6:30,9:30,12:50,15:40,18:35,21:35,24:30,27:25,30:20};
+var EST_LG_PACKS={6.5:90,9:65,12:50,15:40,18:35,21:35,24:30,27:25,30:20};
 
 // Sheet areas (m²)
 var SHEET_AREAS={
@@ -564,7 +565,7 @@ function calcRow(sup,fk,gk,sz,thk,packs,rate,sppLg){
   if(sup==='est'){
     pm2_eur=getPpm2EST(fk,gk,thk,sz);
     if(pm2_eur==null) return null;
-    spp=(sz==='sm'||sz==='lg')?(sz==='sm'?packSM('est',gc,thk):(sppLg||20)):null;
+    spp=(sz==='sm'||sz==='lg')?(sz==='sm'?packSM('est',gc,thk):(EST_LG_PACKS[thk]||sppLg||20)):null;
     if(!spp) return null;
     isEur=true;
   } else if(sup==='lat'){
@@ -640,8 +641,8 @@ function initCompare(){
   Object.keys(FAM_CONFIG).forEach(function(f){
     var o=document.createElement('option');o.value=f;o.textContent=f;famSel.appendChild(o);
   });
-  famSel.addEventListener('change',function(){rebuildCompareSels();updateCompare();});
-  document.getElementById('c-grade').addEventListener('change',function(){buildCThk();buildCSizeToggle();updateCompare();});
+  famSel.addEventListener('change',function(){rebuildCompareSels(false);updateCompare();});
+  document.getElementById('c-grade').addEventListener('change',function(){buildCThk(true);buildCSizeToggle();updateCompare();});
   document.getElementById('c-thickness').addEventListener('change',updateCompare);
   ['c-pe','c-pl','c-ps','c-rate','c-spp-est','c-spp-lat'].forEach(function(id){
     document.getElementById(id).addEventListener('input',updateCompare);
@@ -649,8 +650,8 @@ function initCompare(){
   rebuildCompareSels();
 }
 
-function rebuildCompareSels(){
-  buildCGrade();buildCThk();buildCSizeToggle();updateCompare();
+function rebuildCompareSels(keepCur){
+  buildCGrade();buildCThk(keepCur);buildCSizeToggle();updateCompare();
 }
 
 function buildCGrade(){
@@ -660,13 +661,16 @@ function buildCGrade(){
     var o=document.createElement('option');o.value=k;o.textContent=fam.grades[k].l;gs.appendChild(o);
   });
 }
-function buildCThk(){
-  var ts=document.getElementById('c-thickness'),cur=parseFloat(ts.value);ts.innerHTML='';
+function buildCThk(keepCur){
+  var ts=document.getElementById('c-thickness'),cur=keepCur?parseFloat(ts.value):18;ts.innerHTML='';
   var fam=FAM_CONFIG[document.getElementById('c-family').value];
+  var found=false;
   fam.thk.forEach(function(t){
     var o=document.createElement('option');o.value=t;o.textContent=t+'mm';
-    if(t===cur)o.selected=true;ts.appendChild(o);
+    if(t===cur){o.selected=true;found=true;}
+    ts.appendChild(o);
   });
+  if(!found)ts.options[0].selected=true;
 }
 function buildCSizeToggle(){
   var wrap=document.getElementById('c-size-toggle');wrap.innerHTML='';
@@ -823,10 +827,15 @@ function renderBRow(row){
   var gradeOpts=Object.keys(fam.grades).map(function(k){return '<option value="'+k+'"'+(k===row.gk?' selected':'')+'>'+fam.grades[k].l+'</option>';}).join('');
   var szOpts=fam.sizes.map(function(s){return '<option value="'+s+'"'+(s===row.sz?' selected':'')+'>'+SIZE_LABELS[s]+'</option>';}).join('');
   var thkOpts=fam.thk.map(function(t){return '<option value="'+t+'"'+(t===row.thk?' selected':'')+'>'+t+'mm</option>';}).join('');
-  var needSppOverride=row.sz!=='sm';
-  var sppCell=needSppOverride
-    ?'<input class="inp-packs" type="number" id="bspp'+row.id+'" value="'+(row.sppOverride||15)+'" min="1" title="Sheets per pack">'
-    :'<span id="bspp'+row.id+'"></span>';
+  // ESTply: locked spp (sm=EST_PACKS, lg=EST_LG_PACKS). Latvia/Sklejka: editable
+  var estLocked=curSupBuilder==='est';
+  var autoSpp=null;
+  if(estLocked){
+    autoSpp=row.sz==='lg'?(EST_LG_PACKS[row.thk]||20):EST_PACKS_SM[row.thk];
+  }
+  var sppCell=estLocked
+    ?'<span id="bspp'+row.id+'" style="font-family:var(--mono);font-size:13px;color:var(--text2);padding:6px 4px;display:inline-block;">'+(autoSpp||'—')+'</span><span style="font-size:11px;color:var(--text3);margin-left:3px;">locked</span>'
+    :'<input class="inp-packs" type="number" id="bspp'+row.id+'" value="'+(row.sppOverride||(row.sz==='lg'?15:(LAT_PACKS_SM[row.thk]||20)))+'" min="1" title="Sheets per pack">';
   return '<tr id="brow'+row.id+'">'
     +'<td><select class="sel-family" id="bf'+row.id+'">'+famOpts+'</select></td>'
     +'<td><select class="sel-grade" id="bg'+row.id+'">'+gradeOpts+'</select></td>'
@@ -849,7 +858,13 @@ function updateBuilder(){
   var totalM3=0,totalCost=0,validRows=0;
 
   bRows.forEach(function(row){
-    var sppOv=row.sppOverride;
+    // For ESTply, use locked pack sizes; for others use override or default
+    var sppOv;
+    if(sup==='est'){
+      sppOv=row.sz==='lg'?(EST_LG_PACKS[row.thk]||20):null; // sm handled inside calcRow
+    } else {
+      sppOv=row.sppOverride;
+    }
     var res=calcRow(sup,row.fk,row.gk,row.sz,row.thk,row.packs,rate,sppOv||15);
     var tr=document.getElementById('brow'+row.id);
     if(!tr) return;
