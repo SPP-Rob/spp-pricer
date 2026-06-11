@@ -34,7 +34,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
 #app{display:none;}
 .top-bar{background:var(--green);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:62px;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
 .top-logo{display:flex;align-items:center;gap:10px;}
-.top-logo img{height:32px;filter:brightness(0) invert(1);opacity:0.95;}
+.top-logo img{height:32px;filter:brightness(0) invert(1);opacity:0.95;} @media print{.top-logo img{display:none;} .print-header img{filter:none;}}
 .top-logo-text{font-size:15px;font-weight:600;color:#fff;}
 .top-logo-text span{font-weight:400;opacity:0.7;font-size:13px;margin-left:6px;}
 .rate-bar{display:flex;align-items:center;gap:12px;font-size:13px;}
@@ -188,7 +188,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
 <div id="app">
   <div class="top-bar">
     <div class="top-logo">
-      <img src="https://lirp.cdn-website.com/c77bc2b8/dms3rep/multi/opt/Specialised-Panel-Products-Logo-9f2cae2a-360w.jpg" alt="SPP" onerror="this.style.display='none'">
+      <img src="https://lirp.cdn-website.com/c77bc2b8/dms3rep/multi/opt/Specialised-Panel-Products-Logo-9f2cae2a-360w.jpg" alt="SPP" onerror="this.outerHTML='<span style=\"font-size:17px;font-weight:700;color:#fff;letter-spacing:-0.5px\">SPP</span>'">
       <div class="top-logo-text">SPP Pricer <span>Supplier Cost Comparison</span></div>
     </div>
     <div class="rate-bar">
@@ -435,19 +435,12 @@ var MAXI_PLUS5=['maxi_2150_3050','maxi_2150_3300','maxi_2150_4000','maxi_1830_30
 var FAM_CONFIG={
   'Birch':{
     sizes:['sm','lg'],
-    thk:[6.5,9,12,15,18,21,24,27,30],
+    thk:[6.5,9,12,15,18,21,24,27,30,50],
     grades:{
       bbbb:{l:'Birch BB/BB',ek:'bbbb',lk:'bbbb',sk:null},
       sbb: {l:'Birch S/BB', ek:'sbb', lk:null,  sk:null},
       bbwg:{l:'Birch BB/WG',ek:null,  lk:'bbwg',sk:null},
       wgwg:{l:'Birch WG/WG',ek:null,  lk:'wgwg',sk:null}
-    }
-  },
-  'Birch 50mm':{
-    sizes:['sm'],
-    thk:[50],
-    grades:{
-      bbbb50:{l:'Birch BB/BB',ek:'bbbb',lk:null,sk:null}
     }
   },
   'Pine':{
@@ -458,7 +451,7 @@ var FAM_CONFIG={
       pii2:{l:'Pine II/II',ek:null,lk:null,sk:'pii2',st:'pine',sm:1}
     }
   },
-  'Film / Tex / Form':{
+  'Phenol':{
     sizes:['sm','lg'],
     thk:[6.5,9,12,15,18,21,24,27,30,35,40],
     grades:{
@@ -471,21 +464,16 @@ var FAM_CONFIG={
     }
   },
   'Maxi Panels':{
-    sizes:['maxi_1250_3340','maxi_1250_3660','maxi_1525_3340','maxi_1525_3660','maxi_2150_3050','maxi_2150_3300','maxi_2150_4000','maxi_1830_3050','maxi_1830_3340','maxi_1830_3660','maxi_1830_4000'],
+    sizes:['maxi_1250_3340','maxi_1250_3660','maxi_1525_3340','maxi_1525_3660','maxi_2150_3050','maxi_2150_3300','maxi_2150_4000','maxi_1830_3050','maxi_1830_3340','maxi_1830_3660','maxi_1830_4000','tex4k_1500','tex4k_1200'],
     thk:[6.5,9,12,15,18,21,24,27,30,35,40,45,50],
     grades:{
-      bbbb:{l:'Birch BB/BB',  ek:null,lk:'bbbb',sk:null},
-      bbwg:{l:'Birch BB/WG',  ek:null,lk:'bbwg',sk:null},
-      wgwg:{l:'Birch WG/WG',  ek:null,lk:'wgwg',sk:null},
-      form:{l:'Smooth / Smooth',ek:null,lk:'form',sk:null},
-      deck:{l:'Mesh / Smooth', ek:null,lk:'deck',sk:null}
-    }
-  },
-  'Riga Tex 4000mm':{
-    sizes:['tex4k_1500','tex4k_1200'],
-    thk:[30],
-    grades:{
-      deck4k:{l:'Mesh / Smooth 120g',ek:null,lk:'deck',sk:null,tex4k:true}
+      bbbb:{l:'Birch BB/BB',       ek:null,lk:'bbbb',sk:null},
+      bbwg:{l:'Birch BB/WG',       ek:null,lk:'bbwg',sk:null},
+      wgwg:{l:'Birch WG/WG',       ek:null,lk:'wgwg',sk:null},
+      form:{l:'Smooth / Smooth',   ek:null,lk:'form',sk:null},
+      deck:{l:'Mesh / Smooth',     ek:null,lk:'deck',sk:null},
+      deck4k:{l:'Mesh / Smooth 4m (1500w)',ek:null,lk:'deck',sk:null,tex4k:true},
+      deck4k2:{l:'Mesh / Smooth 4m (1200w)',ek:null,lk:'deck',sk:null,tex4k:true}
     }
   },
   'Clear Coated (Mel)':{
@@ -495,7 +483,7 @@ var FAM_CONFIG={
       mel:{l:'Clear Coated',ek:null,lk:'mel',sk:null}
     }
   },
-  'Lacquer':{
+  'Riga Lacquer':{
     sizes:['sm'],
     thk:[6.5,9,12,15,18,24],
     grades:{
