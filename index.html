@@ -381,7 +381,7 @@ input.pq-transport-input{width:70px;font-family:var(--mono);font-size:12px;}
                 <th style="white-space:nowrap;">Landed<br>cost/sheet</th>
                 <th style="white-space:nowrap;">Margin<br>%</th>
                 <th style="white-space:nowrap;">Delivery<br>£ total</th>
-                <th style="white-space:nowrap;">Sell price<br>/sheet</th>
+                <th style="white-space:nowrap;">Sell price<br>/sheet</th><th style="white-space:nowrap;">Eff.<br>margin %</th>
                 <th style="white-space:nowrap;">Total<br>sheets</th>
                 <th style="white-space:nowrap;">Profit<br>£</th>
                 <th></th>
@@ -1167,7 +1167,7 @@ function addPricingRow(){
   var thk=thkArr.indexOf(18)>=0?18:thkArr[0];
   var defMargin=parseFloat(document.getElementById('pq-margin-default').value)||25;
   pqRows.push({id:id,fk:fk,gk:gk,sz:sz,thk:thk,packs:1,spp:LAT_PACKS_SM[thk]||35,
-    landedOverride:null,margin:defMargin,transport:0});
+    landedOverride:null,sellOverride:null,margin:defMargin,transport:0});
   renderPricingTable();
   updatePricing();
 }
@@ -1187,23 +1187,47 @@ function applyDefaultMargin(){
 }
 
 function calcPQRow(row,rate){
-  // Latvia landed cost — same stack as compare/builder
-  var res=calcRow('lat',row.fk,row.gk,row.sz,row.thk,row.packs,rate,row.spp);
-  var autoLanded=res?res.psl:null;
+  // Get CIF/m3 price from Latvia data
+  var gc=FAM_CONFIG[row.fk]&&FAM_CONFIG[row.fk].grades[row.gk];
+  if(!gc||!gc.lk) return null;
+  var pm3=getPpm3LAT(row.fk,row.gk,row.thk,row.sz);
+  if(!pm3) return null;
+  var spp=row.spp||LAT_PACKS_SM[row.thk]||35;
+  var totalSheets=row.packs*spp;
+  var m2=gM2(row.sz);
+  var m3v=totalSheets*(row.thk/1000)*m2;
+  // Full Latvia landed cost stack
+  var base=pm3*m3v;
+  var tr=8*m3v;
+  var sub=base+tr;
+  var sur=sub*(SC/100);
+  var cif=sub+sur;
+  var cc=CF*m3v;
+  var rec=row.packs*RPP;
+  var totalLandedCost=cif+cc+rec;
+  var autoLanded=totalSheets>0?totalLandedCost/totalSheets:null;
   var landed=row.landedOverride!=null?row.landedOverride:autoLanded;
   if(!landed) return null;
-  var totalSheets=res?res.sheets:(row.packs*(row.spp||1));
   var margin=row.margin/100;
   var transportPerSheet=totalSheets>0?(row.transport||0)/totalSheets:0;
   var costBase=landed+transportPerSheet;
-  var sell=costBase/(1-margin);
+  // Two-way: if sellOverride set, derive margin; otherwise use margin to get sell
+  var sell,effectiveMargin;
+  if(row.sellOverride!=null){
+    sell=row.sellOverride;
+    effectiveMargin=costBase>0?((sell-costBase)/sell*100):0;
+  } else {
+    sell=costBase/(1-margin);
+    effectiveMargin=row.margin;
+  }
   var profitPerSheet=sell-costBase;
   var totalProfit=profitPerSheet*totalSheets;
   var totalRevenue=sell*totalSheets;
   var totalCost=landed*totalSheets;
   return{autoLanded:autoLanded,landed:landed,totalSheets:totalSheets,
-    sell:sell,profitPerSheet:profitPerSheet,totalProfit:totalProfit,
-    totalRevenue:totalRevenue,totalCost:totalCost,m3:res?res.m3:0};
+    sell:sell,effectiveMargin:effectiveMargin,
+    profitPerSheet:profitPerSheet,totalProfit:totalProfit,
+    totalRevenue:totalRevenue,totalCost:totalCost,m3:m3v};
 }
 
 function renderPricingTable(){
@@ -1212,6 +1236,11 @@ function renderPricingTable(){
     var li=document.getElementById('pql'+row.id);
     if(li&&li.tagName==='INPUT'&&li.dataset.manual==='true'){var v=parseFloat(li.value);if(!isNaN(v))row.landedOverride=v;}
     else if(li&&li.dataset.manual!=='true'){row.landedOverride=null;}
+    var si2=document.getElementById('pqsell2_'+row.id);
+    if(si2&&si2.dataset.manual==='true'){var sv=parseFloat(si2.value);row.sellOverride=isNaN(sv)?null:sv;}
+    else if(si2&&si2.dataset.manual!=='true'){row.sellOverride=null;}
+    var mi2=document.getElementById('pqm'+row.id);
+    if(mi2&&mi2.dataset.manual==='true'){var mv=parseFloat(mi2.value);if(!isNaN(mv)){row.margin=mv;row.sellOverride=null;}}
     var mi=document.getElementById('pqm'+row.id);
     if(mi){var v=parseFloat(mi.value);if(!isNaN(v))row.margin=v;}
     var ti=document.getElementById('pqt'+row.id);
@@ -1259,7 +1288,23 @@ function renderPricingTable(){
         recalc();
       });
     }
-    document.getElementById('pqm'+id).addEventListener('input',function(){row.margin=parseFloat(this.value)||25;recalc();});
+    document.getElementById('pqm'+id).addEventListener('input',function(){
+      this.dataset.manual='true';
+      row.margin=parseFloat(this.value)||25;
+      row.sellOverride=null; // margin takes precedence when user edits it
+      var si3=document.getElementById('pqsell2_'+id);
+      if(si3) si3.dataset.manual='false';
+      recalc();
+    });
+    var si3=document.getElementById('pqsell2_'+id);
+    if(si3){
+      si3.addEventListener('input',function(){
+        this.dataset.manual='true';
+        var v=parseFloat(this.value);
+        row.sellOverride=isNaN(v)?null:v;
+        recalc();
+      });
+    }
     document.getElementById('pqt'+id).addEventListener('input',function(){row.transport=parseFloat(this.value)||0;recalc();});
   });
 }
@@ -1298,7 +1343,12 @@ function renderPQRow(row){
     +'<td><input type="number" id="pql'+row.id+'" class="pq-landed-input'+(isOverride?' overridden':'')+'" value="'+landedVal+'" step="0.01" placeholder="auto" style="width:90px;padding:6px 8px;font-size:12px;font-family:var(--mono);border:1.5px solid var(--border2);border-radius:5px;background:var(--surface);color:var(--text);outline:none;" title="Auto-filled from Latvia landed cost. Edit to override."></td>'
     +'<td><input class="pq-margin-input inp-packs" type="number" id="pqm'+row.id+'" value="'+row.margin+'" min="0" max="100" step="0.5" style="width:65px;text-align:center;"></td>'
     +'<td><input class="pq-transport-input inp-packs" placeholder="0.00" type="number" id="pqt'+row.id+'" value="'+(row.transport||0)+'" min="0" step="0.01" style="width:70px;font-family:var(--mono);font-size:12px;"></td>'
-    +'<td class="pq-sell" id="pqsell'+row.id+'">'+sellStr+'</td>'
+    +'<td style="min-width:100px;">'
+      +'<input type="number" id="pqsell2_'+row.id+'" value="'+(calc?calc.sell.toFixed(2):'')+'" step="0.01" min="0"'
+      +' style="width:88px;padding:6px 8px;font-size:13px;font-weight:600;font-family:var(--mono);color:var(--green);border:1.5px solid var(--border2);border-radius:5px;background:var(--surface);outline:none;"'
+      +' title="Enter sell price to back-calculate margin, or adjust margin above" placeholder="auto">'
+      +'</td>'
+      +'<td class="cell-m3" id="pqeffm'+row.id+'">'+(calc?calc.effectiveMargin.toFixed(1)+'%':'—')+'</td>'
     +'<td class="cell-spp" id="pqsheets'+row.id+'">'+(calc?calc.totalSheets:'—')+'</td>'
     +'<td class="'+profitClass+'" id="pqprofit'+row.id+'">'+totalProfitStr+'</td>'
     +'<td><button class="btn-remove" onclick="removePricingRow('+row.id+')">&#10005;</button></td>'
@@ -1310,11 +1360,14 @@ function updatePricing(){
   var totalCost=0,totalRevenue=0,totalProfit=0,totalSheets=0;
   pqRows.forEach(function(row){
     var calc=calcPQRow(row,rate);
-    var sellEl=document.getElementById('pqsell'+row.id);
+    var _unused=null; // sell now uses pqsell2_ input
     var sheetsEl=document.getElementById('pqsheets'+row.id);
     var profitEl=document.getElementById('pqprofit'+row.id);
     if(calc){
-      if(sellEl) sellEl.textContent=G(calc.sell);
+      var sellInp=document.getElementById('pqsell2_'+row.id);
+      if(sellInp&&sellInp.dataset.manual!=='true') sellInp.value=calc.sell.toFixed(2);
+      var effmEl=document.getElementById('pqeffm'+row.id);
+      if(effmEl) effmEl.textContent=calc.effectiveMargin.toFixed(1)+'%';
       if(sheetsEl) sheetsEl.textContent=calc.totalSheets;
       if(profitEl){
         profitEl.textContent=G(calc.totalProfit);
