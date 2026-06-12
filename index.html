@@ -34,7 +34,16 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
 #app{display:none;}
 .top-bar{background:var(--green);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:62px;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
 .top-logo{display:flex;align-items:center;gap:10px;}
-.top-logo img{height:32px;filter:brightness(0) invert(1);opacity:0.95;} @media print{.top-logo img{display:none;} .print-header img{filter:none;}}
+.top-logo img{height:32px;filter:brightness(0) invert(1);opacity:0.95;} /* PRICING */
+.pq-landed{font-family:var(--mono);font-size:12px;color:var(--text3);font-style:italic;}
+.pq-landed.overridden{color:var(--text);font-style:normal;}
+.pq-sell{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--green);}
+.pq-profit{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);}
+.pq-profit.loss{color:var(--red);}
+input.pq-landed-input{width:90px;font-family:var(--mono);font-size:12px;}
+input.pq-margin-input{width:60px;text-align:center;}
+input.pq-transport-input{width:70px;font-family:var(--mono);font-size:12px;}
+@media print{.top-logo img{display:none;} .print-header img{filter:none;}}
 .top-logo-text{font-size:15px;font-weight:600;color:#fff;}
 .top-logo-text span{font-weight:400;opacity:0.7;font-size:13px;margin-left:6px;}
 .rate-bar{display:flex;align-items:center;gap:12px;font-size:13px;}
@@ -178,6 +187,15 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
 .load-stat-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;}
 
 /* PRINT */
+/* PRICING */
+.pq-landed{font-family:var(--mono);font-size:12px;color:var(--text3);font-style:italic;}
+.pq-landed.overridden{color:var(--text);font-style:normal;}
+.pq-sell{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--green);}
+.pq-profit{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);}
+.pq-profit.loss{color:var(--red);}
+input.pq-landed-input{width:90px;font-family:var(--mono);font-size:12px;}
+input.pq-margin-input{width:60px;text-align:center;}
+input.pq-transport-input{width:70px;font-family:var(--mono);font-size:12px;}
 @media print{
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   body{background:#fff;font-size:11px;margin:0;padding:0;}
@@ -221,6 +239,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
     <div class="mode-tabs">
       <button class="mode-tab active" id="tab-compare" onclick="setMode('compare')">&#9654; Compare Prices</button>
       <button class="mode-tab" id="tab-builder" onclick="setMode('builder')">&#9776; Load Builder</button>
+      <button class="mode-tab" id="tab-pricing" onclick="setMode('pricing')">&#163; Forward Pricing</button>
     </div>
 
     <!-- COMPARE MODE -->
@@ -327,6 +346,54 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
       </div>
       <div class="load-summary" id="b-summary">
         <div style="font-size:14px;color:var(--text3);">Add lines above to build your load</div>
+      </div>
+    </div>
+    <!-- PRICING TAB -->
+    <div id="pricing-mode" style="display:none;">
+      <div class="builder-card" style="margin-bottom:16px;">
+        <div class="builder-top">
+          <div class="builder-top-left">
+            <div style="font-size:13px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:0.08em;">Latvia Forward Quoter</div>
+            <div class="field" style="flex-direction:row;align-items:center;gap:8px;">
+              <label style="font-size:12px;color:var(--text2);font-weight:500;">GBP/EUR</label>
+              <input type="number" id="pq-rate" value="1.1555" step="0.001" style="width:90px;padding:6px 8px;font-size:13px;border:1.5px solid var(--border2);border-radius:6px;" oninput="updatePricing()">
+            </div>
+            <div class="field" style="flex-direction:row;align-items:center;gap:8px;">
+              <label style="font-size:12px;color:var(--text2);font-weight:500;">Default margin %</label>
+              <input type="number" id="pq-margin-default" value="25" min="0" max="100" step="0.5" style="width:75px;padding:6px 8px;font-size:13px;border:1.5px solid var(--border2);border-radius:6px;" oninput="applyDefaultMargin()">
+            </div>
+          </div>
+          <div class="builder-top-right">
+            <button class="btn-clear" onclick="clearPricing()">&#10005; Clear</button>
+            <button class="btn-add" onclick="addPricingRow()">+ Add line</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="builder-table" id="pq-table">
+            <thead>
+              <tr>
+                <th>Family</th>
+                <th>Grade</th>
+                <th>Size</th>
+                <th>Thickness</th>
+                <th>Packs</th>
+                <th style="white-space:nowrap;">Sheets/<br>pack</th>
+                <th style="white-space:nowrap;">Landed<br>cost/sheet</th>
+                <th style="white-space:nowrap;">Margin<br>%</th>
+                <th style="white-space:nowrap;">Transport<br>£/sheet</th>
+                <th style="white-space:nowrap;">Sell price<br>/sheet</th>
+                <th style="white-space:nowrap;">Total<br>sheets</th>
+                <th style="white-space:nowrap;">Profit<br>£</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="pq-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Summary -->
+      <div class="load-summary" id="pq-summary">
+        <div style="font-size:14px;color:var(--text3);">Add lines above to build your quote</div>
       </div>
     </div>
   </div>
@@ -690,8 +757,10 @@ function calcRow(sup,fk,gk,sz,thk,packs,rate,sppLg){
 function setMode(m){
   document.getElementById('compare-mode').style.display=m==='compare'?'block':'none';
   document.getElementById('builder-mode').style.display=m==='builder'?'block':'none';
+  document.getElementById('pricing-mode').style.display=m==='pricing'?'block':'none';
   document.getElementById('tab-compare').className='mode-tab'+(m==='compare'?' active':'');
   document.getElementById('tab-builder').className='mode-tab'+(m==='builder'?' active':'');
+  document.getElementById('tab-pricing').className='mode-tab'+(m==='pricing'?' active':'');
 }
 
 // ── COMPARE MODE ──────────────────────────────────────────────────────────
@@ -1082,6 +1151,204 @@ function printLoad(){
   setMode('builder');
   window.print();
 }
+
+
+// ── PRICING TAB ───────────────────────────────────────────────────────────
+var pqRows=[];
+var PQ_ID=0;
+
+function addPricingRow(){
+  var id=PQ_ID++;
+  var fk=Object.keys(FAM_CONFIG)[0]; // default Birch
+  var gkeys=Object.keys(FAM_CONFIG[fk].grades);
+  var gk=gkeys[0];
+  var sz=FAM_CONFIG[fk].sizes[0];
+  var thkArr=FAM_CONFIG[fk].thk;
+  var thk=thkArr.indexOf(18)>=0?18:thkArr[0];
+  var defMargin=parseFloat(document.getElementById('pq-margin-default').value)||25;
+  pqRows.push({id:id,fk:fk,gk:gk,sz:sz,thk:thk,packs:1,spp:LAT_PACKS_SM[thk]||35,
+    landedOverride:null,margin:defMargin,transport:0});
+  renderPricingTable();
+  updatePricing();
+}
+
+function removePricingRow(id){
+  pqRows=pqRows.filter(function(r){return r.id!==id;});
+  renderPricingTable();
+  updatePricing();
+}
+
+function clearPricing(){pqRows=[];PQ_ID=0;renderPricingTable();updatePricing();}
+
+function applyDefaultMargin(){
+  var m=parseFloat(document.getElementById('pq-margin-default').value)||25;
+  pqRows.forEach(function(r){r.margin=m;});
+  renderPricingTable();updatePricing();
+}
+
+function calcPQRow(row,rate){
+  // Latvia landed cost — same stack as compare/builder
+  var res=calcRow('lat',row.fk,row.gk,row.sz,row.thk,row.packs,rate,row.spp);
+  var autoLanded=res?res.psl:null;
+  var landed=row.landedOverride!=null?row.landedOverride:autoLanded;
+  if(!landed) return null;
+  var totalSheets=res?res.sheets:(row.packs*(row.spp||1));
+  var margin=row.margin/100;
+  var transport=row.transport||0;
+  var costBase=landed+transport;
+  var sell=costBase/(1-margin);
+  var profitPerSheet=sell-costBase;
+  var totalProfit=profitPerSheet*totalSheets;
+  var totalRevenue=sell*totalSheets;
+  var totalCost=landed*totalSheets;
+  return{autoLanded:autoLanded,landed:landed,totalSheets:totalSheets,
+    sell:sell,profitPerSheet:profitPerSheet,totalProfit:totalProfit,
+    totalRevenue:totalRevenue,totalCost:totalCost,m3:res?res.m3:0};
+}
+
+function renderPricingTable(){
+  // Save current values before re-render
+  pqRows.forEach(function(row){
+    var li=document.getElementById('pql'+row.id);
+    if(li&&li.tagName==='INPUT'){var v=parseFloat(li.value);if(!isNaN(v))row.landedOverride=v;}
+    var mi=document.getElementById('pqm'+row.id);
+    if(mi){var v=parseFloat(mi.value);if(!isNaN(v))row.margin=v;}
+    var ti=document.getElementById('pqt'+row.id);
+    if(ti){var v=parseFloat(ti.value)||0;row.transport=v;}
+    var pi=document.getElementById('pqp'+row.id);
+    if(pi){var v=parseInt(pi.value)||1;row.packs=v;}
+    var si=document.getElementById('pqs'+row.id);
+    if(si){var v=parseInt(si.value)||1;row.spp=v;}
+  });
+  var tbody=document.getElementById('pq-tbody');
+  if(!pqRows.length){
+    tbody.innerHTML='<tr><td colspan="13" style="text-align:center;padding:20px;color:var(--text3)">No lines — click Add line to start</td></tr>';
+    return;
+  }
+  tbody.innerHTML=pqRows.map(function(row){return renderPQRow(row);}).join('');
+  // Attach events — structural changes re-render, value changes just recalc
+  pqRows.forEach(function(row){
+    var id=row.id;
+    function rerender(){renderPricingTable();updatePricing();}
+    function recalc(){updatePricing();}
+    var famSel=document.getElementById('pqfam'+id);
+    famSel.addEventListener('change',function(){
+      row.fk=this.value;
+      var fam=FAM_CONFIG[row.fk];
+      row.gk=Object.keys(fam.grades)[0];
+      row.sz=fam.sizes[0];
+      var ta=fam.thk;
+      row.thk=ta.indexOf(18)>=0?18:ta[0];
+      row.landedOverride=null;
+      rerender();
+    });
+    document.getElementById('pqgrade'+id).addEventListener('change',function(){row.gk=this.value;row.landedOverride=null;rerender();});
+    document.getElementById('pqsz'+id).addEventListener('change',function(){row.sz=this.value;row.landedOverride=null;rerender();});
+    document.getElementById('pqthk'+id).addEventListener('change',function(){row.thk=parseFloat(this.value);row.landedOverride=null;rerender();});
+    // Value inputs — just recalc
+    document.getElementById('pqp'+id).addEventListener('input',function(){row.packs=parseInt(this.value)||1;row.landedOverride=null;recalc();});
+    document.getElementById('pqs'+id).addEventListener('input',function(){row.spp=parseInt(this.value)||1;row.landedOverride=null;recalc();});
+    var li=document.getElementById('pql'+id);
+    if(li){
+      li.addEventListener('input',function(){
+        var v=parseFloat(this.value);
+        row.landedOverride=isNaN(v)?null:v;
+        this.className='builder-table input pq-landed-input'+(row.landedOverride!=null?' overridden':'');
+        recalc();
+      });
+    }
+    document.getElementById('pqm'+id).addEventListener('input',function(){row.margin=parseFloat(this.value)||25;recalc();});
+    document.getElementById('pqt'+id).addEventListener('input',function(){row.transport=parseFloat(this.value)||0;recalc();});
+  });
+}
+
+function renderPQRow(row){
+  var fam=FAM_CONFIG[row.fk];
+  var famOpts=Object.keys(FAM_CONFIG).map(function(f){
+    return '<option value="'+f+'"'+(f===row.fk?' selected':'')+'>'+f+'</option>';
+  }).join('');
+  var gradeOpts=Object.keys(fam.grades).map(function(k){
+    return '<option value="'+k+'"'+(k===row.gk?' selected':'')+'>'+fam.grades[k].l+'</option>';
+  }).join('');
+  var szOpts=fam.sizes.map(function(s){
+    return '<option value="'+s+'"'+(s===row.sz?' selected':'')+'>'+SIZE_LABELS[s]+'</option>';
+  }).join('');
+  var thkOpts=fam.thk.map(function(t){
+    return '<option value="'+t+'"'+(t===row.thk?' selected':'')+'>'+t+'mm</option>';
+  }).join('');
+  var rate=parseFloat(document.getElementById('pq-rate').value)||sppRate;
+  var calc=calcPQRow(row,rate);
+  var autoStr=calc&&calc.autoLanded?calc.autoLanded.toFixed(2):'';
+  var landedVal=row.landedOverride!=null?row.landedOverride.toFixed(2):autoStr;
+  var isOverride=row.landedOverride!=null;
+  var sellStr=calc?G(calc.sell):'—';
+  var profitStr=calc?G(calc.profitPerSheet)+'/sheet':'—';
+  var totalProfitStr=calc?G(calc.totalProfit):'—';
+  var profitClass=calc&&calc.totalProfit<0?'pq-profit loss':'pq-profit';
+  var sppDefault=row.sz==='sm'?(LAT_PACKS_SM[row.thk]||35):15;
+  return '<tr id="pqrow'+row.id+'">'
+    +'<td><select class="sel-family" id="pqfam'+row.id+'">'+famOpts+'</select></td>'
+    +'<td><select class="sel-grade" id="pqgrade'+row.id+'">'+gradeOpts+'</select></td>'
+    +'<td><select class="sel-size" id="pqsz'+row.id+'" style="width:120px;">'+szOpts+'</select></td>'
+    +'<td><select class="sel-thk" id="pqthk'+row.id+'">'+thkOpts+'</select></td>'
+    +'<td><input class="inp-packs" type="number" id="pqp'+row.id+'" value="'+row.packs+'" min="1" style="width:60px;"></td>'
+    +'<td><input class="inp-packs" type="number" id="pqs'+row.id+'" value="'+(row.spp||sppDefault)+'" min="1" style="width:60px;"></td>'
+    +'<td><input type="number" id="pql'+row.id+'" class="pq-landed-input'+(isOverride?' overridden':'')+'" value="'+landedVal+'" step="0.01" placeholder="auto" style="width:90px;padding:6px 8px;font-size:12px;font-family:var(--mono);border:1.5px solid '+(isOverride?'var(--amber)':'var(--border2)')+';border-radius:5px;background:var(--surface);color:var(--text);outline:none;" title="Auto-filled from Latvia landed cost. Edit to override."></td>'
+    +'<td><input class="pq-margin-input inp-packs" type="number" id="pqm'+row.id+'" value="'+row.margin+'" min="0" max="100" step="0.5" style="width:65px;text-align:center;"></td>'
+    +'<td><input class="pq-transport-input inp-packs" type="number" id="pqt'+row.id+'" value="'+(row.transport||0)+'" min="0" step="0.01" style="width:70px;font-family:var(--mono);font-size:12px;"></td>'
+    +'<td class="pq-sell" id="pqsell'+row.id+'">'+sellStr+'</td>'
+    +'<td class="cell-spp" id="pqsheets'+row.id+'">'+(calc?calc.totalSheets:'—')+'</td>'
+    +'<td class="'+profitClass+'" id="pqprofit'+row.id+'">'+totalProfitStr+'</td>'
+    +'<td><button class="btn-remove" onclick="removePricingRow('+row.id+')">&#10005;</button></td>'
+    +'</tr>';
+}
+
+function updatePricing(){
+  var rate=parseFloat(document.getElementById('pq-rate').value)||sppRate;
+  var totalCost=0,totalRevenue=0,totalProfit=0,totalSheets=0;
+  pqRows.forEach(function(row){
+    var calc=calcPQRow(row,rate);
+    var sellEl=document.getElementById('pqsell'+row.id);
+    var sheetsEl=document.getElementById('pqsheets'+row.id);
+    var profitEl=document.getElementById('pqprofit'+row.id);
+    if(calc){
+      if(sellEl) sellEl.textContent=G(calc.sell);
+      if(sheetsEl) sheetsEl.textContent=calc.totalSheets;
+      if(profitEl){
+        profitEl.textContent=G(calc.totalProfit);
+        profitEl.className=calc.totalProfit<0?'pq-profit loss':'pq-profit';
+      }
+      totalCost+=calc.totalCost;
+      totalRevenue+=calc.totalRevenue;
+      totalProfit+=calc.totalProfit;
+      totalSheets+=calc.totalSheets;
+    } else {
+      if(sellEl) sellEl.textContent='N/A';
+      if(sheetsEl) sheetsEl.textContent='—';
+      if(profitEl) profitEl.textContent='—';
+    }
+  });
+  var blendedMargin=totalRevenue>0?((totalProfit/totalRevenue)*100).toFixed(1):0;
+  var pct=totalRevenue>0?((totalProfit/totalRevenue)*100).toFixed(1):0;
+  var summaryHtml='<div class="load-stats">'
+    +'<div class="load-stat"><div class="load-stat-val">'+totalSheets+'</div><div class="load-stat-lbl">Total sheets</div></div>'
+    +'<div class="load-stat"><div class="load-stat-val">'+G(totalCost)+'</div><div class="load-stat-lbl">Total cost</div></div>'
+    +'<div class="load-stat"><div class="load-stat-val">'+G(totalRevenue)+'</div><div class="load-stat-lbl">Total revenue</div></div>'
+    +'<div class="load-stat"><div class="load-stat-val" style="color:var(--green);">'+G(totalProfit)+'</div><div class="load-stat-lbl">Total profit</div></div>'
+    +'<div class="load-stat"><div class="load-stat-val" style="color:var(--green);">'+pct+'%</div><div class="load-stat-lbl">Blended margin</div></div>'
+    +'</div>';
+  var sumDiv=document.getElementById('pq-summary');
+  if(sumDiv) sumDiv.innerHTML=pqRows.length?summaryHtml:'<div style="font-size:14px;color:var(--text3);">Add lines above to build your quote</div>';
+}
+
+// Sync rate from live fetch to pricing tab
+var _origSyncRate=syncRateToInputs;
+syncRateToInputs=function(){
+  _origSyncRate();
+  var pqr=document.getElementById('pq-rate');
+  if(pqr) pqr.value=sppRate.toFixed(4);
+  updatePricing();
+};
 
 document.getElementById('pw-input').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
 </script>
