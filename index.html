@@ -102,11 +102,11 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
 .compact-name{font-size:13px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;}
 .compact-price{font-family:var(--mono);font-size:46px;font-weight:600;color:var(--text);line-height:1;margin-bottom:2px;letter-spacing:-2px;}
 .compact-card.winner .compact-price{color:var(--green);}
-.compact-sub{font-size:12px;color:var(--text3);margin-bottom:16px;}
+.compact-sub{font-size:13px;color:var(--text3);margin-bottom:16px;font-family:var(--sans);}
 .compact-winner{display:inline-flex;align-items:center;gap:4px;background:var(--green-light);color:var(--green);border:1px solid var(--green-mid);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:14px;}
 .compact-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;border-top:1px solid var(--border);padding-top:12px;}
 .compact-stat-lbl{font-size:11px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:0.04em;}
-.compact-stat-val{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--text);}
+.compact-stat-val{font-family:var(--sans);font-size:14px;font-weight:600;color:var(--text);}
 .compact-detail-btn{position:absolute;top:16px;right:16px;background:none;border:1.5px solid var(--border2);border-radius:6px;color:var(--text3);font-size:11px;font-weight:500;padding:4px 10px;cursor:pointer;font-family:var(--sans);transition:border-color .15s,color .15s;}
 .compact-detail-btn:hover{border-color:var(--green);color:var(--green);}
 .view-toggle{display:inline-flex;background:var(--surface2);border:1.5px solid var(--border2);border-radius:6px;overflow:hidden;margin-bottom:14px;}
@@ -179,17 +179,17 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
 
 /* PRINT */
 @media print{
-  body{background:#fff;font-size:12px;}
-  #login-screen,#app>.top-bar,.mode-tabs,.builder-top .btn-print,.builder-top .btn-add,.builder-top .btn-clear,.btn-remove{display:none!important;}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  body{background:#fff;font-size:11px;margin:0;padding:0;}
+  #login-screen,#app>.top-bar,.mode-tabs,.builder-top,.load-summary,.btn-remove,
+  .view-toggle,#compare-mode{display:none!important;}
   #app{display:block!important;}
   #builder-mode{display:block!important;}
-  #compare-mode{display:none!important;}
-  .builder-card{box-shadow:none;border:1px solid #ccc;padding:12px;}
-  .load-summary{box-shadow:none;border:1px solid #ccc;}
-  .print-header{display:flex!important;align-items:center;justify-content:space-between;padding:0 0 14px;margin-bottom:14px;border-bottom:2px solid #0e7d3c;}
-  .print-meta{font-size:11px;color:#666;text-align:right;}
+  .builder-card{box-shadow:none;border:none;padding:0;}
+  #print-sheet{display:block!important;}
+  .builder-table-wrap{display:none!important;}
 }
-.print-header{display:none;}
+#print-sheet{display:none;}
 </style>
 </head>
 <body>
@@ -208,7 +208,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
 <div id="app">
   <div class="top-bar">
     <div class="top-logo">
-      <img id="spp-logo-top" src="./logo.png" alt="SPP" style="height:32px;filter:brightness(0) invert(1);opacity:0.95;" onerror="this.style.display='none';document.getElementById('spp-logo-text').style.display='block'">
+      <img id="spp-logo-top" src="./logo.png" alt="SPP" style="height:34px;background:#fff;border-radius:5px;padding:3px 8px;" onerror="this.style.display='none';document.getElementById('spp-logo-text').style.display='block'">
       <span id="spp-logo-text" style="display:none;font-size:16px;font-weight:700;color:#fff;letter-spacing:-0.5px;margin-right:4px;">SPP</span><div class="top-logo-text">SPP Pricer <span>Supplier Cost Comparison</span></div>
     </div>
     <div class="rate-bar">
@@ -256,9 +256,34 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
 
     <!-- LOAD BUILDER -->
     <div id="builder-mode">
-      <div class="print-header">
-        <img src="https://lirp.cdn-website.com/c77bc2b8/dms3rep/multi/opt/Specialised-Panel-Products-Logo-9f2cae2a-360w.jpg" alt="SPP" style="height:40px;">
-        <div class="print-meta" id="print-meta"></div>
+      <div id="print-sheet">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;margin-bottom:14px;border-bottom:2.5px solid #0e7d3c;">
+          <img src="./logo.png" alt="SPP" style="height:40px;background:#fff;">
+          <div style="text-align:right;font-size:11px;color:#444;line-height:1.7;">
+            <div id="print-supplier" style="font-size:14px;font-weight:600;color:#1a1f2e;"></div>
+            <div id="print-date"></div>
+            <div id="print-rate"></div>
+          </div>
+        </div>
+        <table id="print-table" style="width:100%;border-collapse:collapse;font-size:11px;">
+          <thead>
+            <tr style="background:#0e7d3c;color:#fff;">
+              <th style="padding:8px 10px;text-align:left;font-weight:600;width:60px;">Qty (sheets)</th>
+              <th style="padding:8px 10px;text-align:left;font-weight:600;">Description</th>
+              <th style="padding:8px 10px;text-align:right;font-weight:600;width:100px;">£/m³</th>
+              <th style="padding:8px 10px;text-align:right;font-weight:600;width:90px;">Total</th>
+            </tr>
+          </thead>
+          <tbody id="print-tbody"></tbody>
+          <tfoot>
+            <tr style="background:#f4f6f8;">
+              <td colspan="2" style="padding:8px 10px;font-weight:600;font-size:12px;border-top:2px solid #0e7d3c;">Total</td>
+              <td style="padding:8px 10px;border-top:2px solid #0e7d3c;"></td>
+              <td id="print-total" style="padding:8px 10px;text-align:right;font-weight:700;font-size:13px;border-top:2px solid #0e7d3c;"></td>
+            </tr>
+          </tfoot>
+        </table>
+        <div style="margin-top:14px;font-size:10px;color:#8a96a8;">All prices are landed cost at Immingham including CIF, transport supplement, surcharge, customs &amp; collection, and receiving charges. Prices are indicative and subject to confirmation.</div>
       </div>
       <div class="builder-card">
         <div class="builder-top">
@@ -814,6 +839,7 @@ function setBuilderSupplier(sup){
     var btn=document.getElementById('bsup-'+s);
     btn.className='supplier-btn'+(sup===s?' active-'+s:'');
   });
+  renderBuilderTable();
   updateBuilder();
 }
 
@@ -842,7 +868,19 @@ function clearBuilder(){
   updateBuilder();
 }
 
+function saveSppOverrides(){
+  bRows.forEach(function(row){
+    var el=document.getElementById('bspp'+row.id);
+    if(el&&el.tagName==='INPUT'){
+      var v=parseInt(el.value);
+      if(v>0) row.sppOverride=v;
+    }
+    var pe=document.getElementById('bp'+row.id);
+    if(pe){var v2=parseInt(pe.value);if(v2>0)row.packs=v2;}
+  });
+}
 function renderBuilderTable(){
+  saveSppOverrides();
   var tbody=document.getElementById('b-tbody');
   if(!bRows.length){tbody.innerHTML='<tr><td colspan="11" style="text-align:center;padding:20px;color:var(--text3)">No lines added yet</td></tr>';return;}
   tbody.innerHTML=bRows.map(function(row){return renderBRow(row);}).join('');
@@ -895,7 +933,7 @@ function renderBRow(row){
   }
   var sppCell=estLocked
     ?'<span id="bspp'+row.id+'" style="font-family:var(--mono);font-size:13px;color:var(--text2);padding:6px 4px;display:inline-block;">'+(autoSpp||'—')+'</span><span style="font-size:11px;color:var(--text3);margin-left:3px;">locked</span>'
-    :'<input class="inp-packs" type="number" id="bspp'+row.id+'" value="'+(row.sppOverride||(row.sz==='lg'?15:(LAT_PACKS_SM[row.thk]||20)))+'" min="1" title="Sheets per pack">';
+    :'<input class="inp-packs" type="number" id="bspp'+row.id+'" value="'+(row.sppOverride||(row.sz==='sm'?(LAT_PACKS_SM[row.thk]||20):15))+'" min="1" title="Sheets per pack">';
   return '<tr id="brow'+row.id+'">'
     +'<td><select class="sel-family" id="bf'+row.id+'">'+famOpts+'</select></td>'
     +'<td><select class="sel-grade" id="bg'+row.id+'">'+gradeOpts+'</select></td>'
@@ -966,10 +1004,56 @@ function updateBuilder(){
 }
 
 function printLoad(){
+  saveSppOverrides();
   var sup={'est':'ESTply','lat':'Latvijas Finieris','skl':'Sklejka Multi'}[curSupBuilder];
-  document.getElementById('print-meta').innerHTML=
-    '<strong>'+sup+'</strong> &nbsp;&middot;&nbsp; '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})
-    +'<br>SPP buy rate: \u20AC'+sppRate.toFixed(4);
+  var rate=parseFloat(document.getElementById('b-rate').value)||sppRate;
+  var dateStr=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('print-supplier').textContent=sup;
+  document.getElementById('print-date').textContent='Date: '+dateStr;
+  document.getElementById('print-rate').textContent='SPP buy rate: €'+rate.toFixed(4);
+  var tbody=document.getElementById('print-tbody');
+  var totalCost=0;
+  var rows='';
+  bRows.forEach(function(row,i){
+    var sppOv;
+    if(curSupBuilder==='est'){
+      sppOv=row.sz==='lg'?(EST_LG_PACKS[row.thk]||20):null;
+    } else {
+      sppOv=row.sppOverride;
+    }
+    var res=calcRow(curSupBuilder,row.fk,row.gk,row.sz,row.thk,row.packs,rate,sppOv||15);
+    if(!res) return;
+    totalCost+=res.tot;
+    var bg=i%2===0?'#fff':'#f9fafb';
+    var sizeLabel=SIZE_LABELS[row.sz]||row.sz;
+    var gc=FAM_CONFIG[row.fk].grades[row.gk];
+    var gradeName=gc?gc.l:row.gk;
+    var desc=row.fk+' — '+gradeName+' — '+sizeLabel+' — '+row.thk+'mm';
+    var packingStr='Packed '+row.packs+(row.packs>1?' packs':' pack')+' of '+res.spp+' sheets';
+    var pm3Str='';
+    if(curSupBuilder==='est'){
+      var band=row.sz==='lg'?'lg':'sm';
+      var ek=gc?gc.ek:null;
+      var pm2=ek?(EST[band][ek]||{})[row.thk]:null;
+      if(pm2) pm3Str='€'+Math.round(pm2/((row.thk/1000)*gM2(row.sz)))+'/m³';
+    } else if(curSupBuilder==='lat'){
+      var pm3=getPpm3LAT(row.fk,row.gk,row.thk,row.sz);
+      if(pm3) pm3Str='£'+pm3+'/m³';
+    } else {
+      var ek2=gc?gc.sk:null;
+      var raw=ek2?(SKL[ek2]||{})[row.thk]:null;
+      if(raw) pm3Str='€'+Math.round(raw*(gc.sm||1))+'/m³';
+    }
+    rows+='<tr style="background:'+bg+';border-bottom:1px solid #e2e6ea;">'
+      +'<td style="padding:8px 10px;font-weight:600;vertical-align:top;">'+res.sheets+'</td>'
+      +'<td style="padding:8px 10px;line-height:1.6;vertical-align:top;">'+desc
+      +'<br><span style="font-size:10px;color:#8a96a8;">'+packingStr+'</span></td>'
+      +'<td style="padding:8px 10px;text-align:right;font-family:monospace;vertical-align:top;">'+pm3Str+'</td>'
+      +'<td style="padding:8px 10px;text-align:right;font-weight:600;font-family:monospace;vertical-align:top;">£'+res.tot.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2})+'</td>'
+      +'</tr>';
+  });
+  tbody.innerHTML=rows||'<tr><td colspan="4" style="padding:12px;text-align:center;color:#8a96a8;">No lines to print</td></tr>';
+  document.getElementById('print-total').textContent='£'+totalCost.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});
   setMode('builder');
   window.print();
 }
