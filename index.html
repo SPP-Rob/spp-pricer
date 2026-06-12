@@ -633,7 +633,7 @@ function calcRow(sup,fk,gk,sz,thk,packs,rate,sppLg){
       else if(mel||lac){spp=LAT_PACKS_SM[thk]||null;}
       else{spp=packSM('lat',gc,thk);}
     } else if(sz==='lg'){spp=sppLg||15;}
-    else {spp=row&&row.sppOverride?row.sppOverride:getMaxiSpp(thk,sz);} // maxi/tex4k — ~1m³ per pack
+    else {spp=sppLg||getMaxiSpp(thk,sz);} // maxi/tex4k — ~1m³ per pack
     if(!spp) return null;
   } else if(sup==='skl'){
     var pm3_eur=getPpm3SKL(gc,thk);
@@ -738,7 +738,7 @@ function buildCSizeToggle(){
       wrap.querySelectorAll('button').forEach(function(x){x.className='';});
       b.className='active';
       curSize=sz;
-      var isLg=sz==='lg'||sz.indexOf('maxi')===0||sz.indexOf('tex4k')===0;
+      var isLg=sz==='lg'; // only show lg-packs for 1525x3050, not Maxi (handled differently)
       document.getElementById('c-lg-packs').style.display=isLg?'grid':'none';
       updateCompare();
     };
@@ -777,6 +777,13 @@ function updateCompare(){
 
   var famKey=document.getElementById('c-family').value;
   var latOnly=(famKey==='Maxi Panels');
+  // Show/hide EST and SKL pack inputs for Maxi (Latvia only)
+  ['c-pe','c-ps'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el&&el.parentElement) el.parentElement.style.display=latOnly?'none':'flex';
+  });
+  var plLabel=document.getElementById('c-pl-label');
+  if(plLabel) plLabel.textContent=latOnly?'Packs — Latvia (1 pack ≈ 1m³)':'Packs — Latvia';
   var cardSuppliers=latOnly
     ?[{r:lR,n:pl,lbl:'Latvijas Finieris',tag:'lat'}]
     :[{r:eR,n:pe,lbl:'ESTply',tag:'est'},{r:lR,n:pl,lbl:'Latvijas Finieris',tag:'lat'},{r:sR,n:ps,lbl:'Sklejka Multi',tag:'skl'}];
