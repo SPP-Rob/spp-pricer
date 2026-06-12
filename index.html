@@ -516,16 +516,14 @@ var FAM_CONFIG={
     }
   },
   'Maxi Panels':{
-    sizes:['maxi_1250_3340','maxi_1250_3660','maxi_1525_3340','maxi_1525_3660','maxi_2150_3050','maxi_2150_3300','maxi_2150_4000','maxi_1830_3050','maxi_1830_3340','maxi_1830_3660','maxi_1830_4000','tex4k_1500','tex4k_1200'],
+    sizes:['maxi_1250_3340','maxi_1250_3660','maxi_1525_3340','maxi_1525_3660','maxi_2150_3050','maxi_2150_3300','maxi_2150_4000','maxi_1830_3050','maxi_1830_3340','maxi_1830_3660','maxi_1830_4000'],
     thk:[6.5,9,12,15,18,21,24,27,30,35,40,45,50],
     grades:{
       bbbb:{l:'Birch BB/BB',       ek:null,lk:'bbbb',sk:null},
       bbwg:{l:'Birch BB/WG',       ek:null,lk:'bbwg',sk:null},
       wgwg:{l:'Birch WG/WG',       ek:null,lk:'wgwg',sk:null},
       form:{l:'Smooth / Smooth',   ek:null,lk:'form',sk:null},
-      deck:{l:'Mesh / Smooth',     ek:null,lk:'deck',sk:null},
-      deck4k:{l:'Mesh / Smooth 4m (1500w)',ek:null,lk:'deck',sk:null,tex4k:true},
-      deck4k2:{l:'Mesh / Smooth 4m (1200w)',ek:null,lk:'deck',sk:null,tex4k:true}
+      deck:{l:'Mesh / Smooth',     ek:null,lk:'deck',sk:null}
     }
   },
   'Clear Coated (Mel)':{
@@ -533,6 +531,13 @@ var FAM_CONFIG={
     thk:[6.5,12,15,18],
     grades:{
       mel:{l:'Clear Coated',ek:null,lk:'mel',sk:null}
+    }
+  },
+  'Riga Tex 4000mm':{
+    sizes:['tex4k_1500','tex4k_1200'],
+    thk:[30],
+    grades:{
+      deck4k:{l:'Mesh / Smooth 120g',ek:null,lk:'deck',sk:null,tex4k:true}
     }
   },
   'Riga Lacquer':{
