@@ -382,8 +382,7 @@ input.pq-transport-input{width:70px;font-family:var(--mono);font-size:12px;}
                 <th style="white-space:nowrap;">Margin<br>%</th>
                 <th style="white-space:nowrap;">Delivery<br>£ total</th>
                 <th style="white-space:nowrap;">Sell price<br>/sheet</th><th style="white-space:nowrap;">Eff.<br>margin %</th>
-                <th style="white-space:nowrap;">Profit<br>/sheet</th>
-                <th style="white-space:nowrap;">Profit<br>£</th>
+                <th style="white-space:nowrap;">Line profit £</th>
                 <th></th>
               </tr>
             </thead>
@@ -1349,7 +1348,7 @@ function renderPQRow(row){
       +' title="Enter sell price to back-calculate margin, or adjust margin above" placeholder="auto">'
       +'</td>'
       +'<td class="cell-m3" id="pqeffm'+row.id+'">'+(calc?calc.effectiveMargin.toFixed(1)+'%':'—')+'</td>'
-    +'<td class="pq-profit" id="pqpslprofit'+row.id+'">'+(calc?G(calc.profitPerSheet):'—')+'</td>'
+    
     +'<td class="'+profitClass+'" id="pqprofit'+row.id+'">'+totalProfitStr+'</td>'
     +'<td><button class="btn-remove" onclick="removePricingRow('+row.id+')">&#10005;</button></td>'
     +'</tr>';
@@ -1367,11 +1366,6 @@ function updatePricing(){
       if(sellInp&&sellInp.dataset.manual!=='true') sellInp.value=calc.sell.toFixed(2);
       var effmEl=document.getElementById('pqeffm'+row.id);
       if(effmEl) effmEl.textContent=calc.effectiveMargin.toFixed(1)+'%';
-      var pslProfitEl=document.getElementById('pqpslprofit'+row.id);
-      if(pslProfitEl){
-        pslProfitEl.textContent=G(calc.profitPerSheet);
-        pslProfitEl.className=calc.profitPerSheet<0?'pq-profit loss':'pq-profit';
-      }
       if(profitEl){
         profitEl.textContent=G(calc.totalProfit);
         profitEl.className=calc.totalProfit<0?'pq-profit loss':'pq-profit';
