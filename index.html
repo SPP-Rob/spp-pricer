@@ -772,7 +772,7 @@ function renderCCard(res,n,lbl,tag,win){
   }
   if(curView==='compact'){
     return '<div class="compact-card'+(win?' winner':'')+'">'
-      +'<button class="compact-detail-btn" onclick="setView('detail')" title="Show full breakdown">Details ›</button>'
+      +'<button class="compact-detail-btn" onclick="setView(&quot;detail&quot;)" title="Show full breakdown">Details ›</button>'
       +'<div class="compact-header"><span class="compact-name">'+lbl+'</span><span class="rc-tag tag-'+tag+'">'+tag.toUpperCase()+'</span></div>'
       +'<div class="compact-price">'+G(res.psl)+'</div>'
       +'<div class="compact-sub">per sheet &nbsp;·&nbsp; landed at Immingham</div>'
