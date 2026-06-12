@@ -93,6 +93,26 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
 .rc-breakdown td:last-child{text-align:right;padding-left:8px;white-space:nowrap;color:var(--text2);}
 .rc-breakdown tr.total td{border-top:1px solid var(--border);padding-top:6px;color:var(--text);font-weight:500;font-size:13px;}
 .rc-na{font-size:13px;color:var(--text3);margin-top:8px;font-style:italic;}
+
+/* COMPACT CARD */
+.compact-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px 22px;transition:border-color .2s,box-shadow .2s;position:relative;}
+.compact-card.winner{border-color:var(--green);box-shadow:0 0 0 3px rgba(14,125,60,0.1);}
+.compact-card.na{background:var(--surface2);opacity:0.55;}
+.compact-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;}
+.compact-name{font-size:13px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;}
+.compact-price{font-family:var(--mono);font-size:46px;font-weight:600;color:var(--text);line-height:1;margin-bottom:2px;letter-spacing:-2px;}
+.compact-card.winner .compact-price{color:var(--green);}
+.compact-sub{font-size:12px;color:var(--text3);margin-bottom:16px;}
+.compact-winner{display:inline-flex;align-items:center;gap:4px;background:var(--green-light);color:var(--green);border:1px solid var(--green-mid);font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:14px;}
+.compact-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;border-top:1px solid var(--border);padding-top:12px;}
+.compact-stat-lbl{font-size:11px;color:var(--text3);margin-bottom:2px;text-transform:uppercase;letter-spacing:0.04em;}
+.compact-stat-val{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--text);}
+.compact-detail-btn{position:absolute;top:16px;right:16px;background:none;border:1.5px solid var(--border2);border-radius:6px;color:var(--text3);font-size:11px;font-weight:500;padding:4px 10px;cursor:pointer;font-family:var(--sans);transition:border-color .15s,color .15s;}
+.compact-detail-btn:hover{border-color:var(--green);color:var(--green);}
+.view-toggle{display:inline-flex;background:var(--surface2);border:1.5px solid var(--border2);border-radius:6px;overflow:hidden;margin-bottom:14px;}
+.view-toggle button{background:none;border:none;padding:6px 14px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;font-family:var(--sans);border-right:1px solid var(--border2);transition:background .15s,color .15s;}
+.view-toggle button:last-child{border-right:none;}
+.view-toggle button.active{background:var(--green);color:#fff;}
 .verdict-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 20px;display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;flex-wrap:wrap;}
 .verdict-main{font-size:15px;font-weight:600;}
 .verdict-sub{font-size:13px;color:var(--text3);font-family:var(--mono);}
@@ -224,7 +244,13 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16
           <div class="field"><label>Sheets/pack — Latvia (large)</label><input type="number" id="c-spp-lat" value="15" min="1"></div>
         </div>
       </div>
-      <div class="results-grid" id="c-results"></div>
+      <div style="margin-bottom:10px;">
+  <div class="view-toggle">
+    <button id="vt-compact" class="active" onclick="setView('compact')">&#9632; Card view</button>
+    <button id="vt-detail" onclick="setView('detail')">&#9776; Full detail</button>
+  </div>
+</div>
+<div class="results-grid" id="c-results"></div>
       <div class="verdict-card" id="c-verdict"></div>
     </div>
 
@@ -692,6 +718,14 @@ function buildCSizeToggle(){
   });
 }
 
+var curView='compact';
+function setView(v){
+  curView=v;
+  document.getElementById('vt-compact').className=v==='compact'?'active':'';
+  document.getElementById('vt-detail').className=v==='detail'?'active':'';
+  updateCompare();
+}
+
 function updateCompare(){
   var fk=document.getElementById('c-family').value;
   var gk=document.getElementById('c-grade').value;
@@ -733,18 +767,34 @@ function updateCompare(){
 
 function renderCCard(res,n,lbl,tag,win){
   if(!res){
-    return '<div class="result-card na"><div class="rc-name">'+lbl+'</div><div class="rc-price" style="font-size:22px;color:var(--text3)">N/A</div><hr class="rc-divider"><div class="rc-na">Not available for this grade/size</div></div>';
+    var cls=curView==='compact'?'compact-card na':'result-card na';
+    return '<div class="'+cls+'"><div style="font-size:13px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">'+lbl+'</div><div style="font-size:22px;color:var(--text3);font-family:var(--mono);">N/A</div><div style="font-size:12px;color:var(--text3);margin-top:6px;font-style:italic;">Not available for this grade / size</div></div>';
+  }
+  if(curView==='compact'){
+    return '<div class="compact-card'+(win?' winner':'')+'">'
+      +'<button class="compact-detail-btn" onclick="setView('detail')" title="Show full breakdown">Details ›</button>'
+      +'<div class="compact-header"><span class="compact-name">'+lbl+'</span><span class="rc-tag tag-'+tag+'">'+tag.toUpperCase()+'</span></div>'
+      +'<div class="compact-price">'+G(res.psl)+'</div>'
+      +'<div class="compact-sub">per sheet &nbsp;·&nbsp; landed at Immingham</div>'
+      +(win?'<div class="compact-winner">✓ Cheapest per sheet</div>':'')
+      +'<div class="compact-stats">'
+      +'<div><div class="compact-stat-lbl">Pack volume</div><div class="compact-stat-val">'+res.m3.toFixed(3)+' m³</div></div>'
+      +'<div><div class="compact-stat-lbl">Sheets per pack</div><div class="compact-stat-val">'+res.spp+'</div></div>'
+      +'<div><div class="compact-stat-lbl">CIF only</div><div class="compact-stat-val">'+G(res.pcif)+'/sheet</div></div>'
+      +'<div><div class="compact-stat-lbl">Pack total</div><div class="compact-stat-val">'+G(res.tot)+'</div></div>'
+      +'</div>'
+      +'</div>';
   }
   var rows=res.rows.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>';}).join('');
   return '<div class="result-card'+(win?' winner':'')+'">'
     +'<div class="rc-header"><span class="rc-name">'+lbl+'</span><span class="rc-tag tag-'+tag+'">'+tag.toUpperCase()+'</span></div>'
-    +'<div class="rc-packs">'+res.spp+' sheets/pack &middot; '+n+' pack'+(n>1?'s':'')+' = '+res.sheets+' sheets</div>'
+    +'<div class="rc-packs">'+res.spp+' sheets/pack · '+n+' pack'+(n>1?'s':'')+' = '+res.sheets+' sheets</div>'
     +'<div class="rc-price">'+G(res.psl)+'</div>'
-    +'<div class="rc-price-sub">per sheet landed &middot; CIF only: '+G(res.pcif)+'/sheet</div>'
-    +(win?'<div class="winner-pill">&#10003; Cheapest per sheet</div>':'')
+    +'<div class="rc-price-sub">per sheet landed at Immingham · CIF only: '+G(res.pcif)+'/sheet</div>'
+    +(win?'<div class="winner-pill">✓ Cheapest per sheet</div>':'')
     +'<hr class="rc-divider"><div class="rc-cif">'+res.cifLine+'</div>'
     +'<table class="rc-breakdown">'+rows
-    +'<tr class="total"><td>Order total &middot; '+res.sheets+' sheets &middot; '+res.m3.toFixed(3)+'m\xB3</td><td>'+G(res.tot)+'</td></tr>'
+    +'<tr class="total"><td>Order total · '+res.sheets+' sheets · '+res.m3.toFixed(3)+'m³</td><td>'+G(res.tot)+'</td></tr>'
     +'</table></div>';
 }
 
@@ -814,10 +864,20 @@ function renderBuilderTable(){
       renderBuilderTable();updateBuilder();
     });
     gradeSel.addEventListener('change',function(){row.gk=this.value;updateBuilder();});
-    szSel.addEventListener('change',function(){row.sz=this.value;updateBuilder();});
-    thkSel.addEventListener('change',function(){row.thk=parseFloat(this.value);updateBuilder();});
+    szSel.addEventListener('change',function(){row.sz=this.value;renderBuilderTable();updateBuilder();});
+    thkSel.addEventListener('change',function(){
+      row.thk=parseFloat(this.value);
+      // Re-render to update locked EST spp display for new thickness
+      if(curSupBuilder==='est'){renderBuilderTable();}
+      updateBuilder();
+    });
+    // Packs and spp: update value but do NOT re-render — just recalculate
     packInp.addEventListener('input',function(){row.packs=parseInt(this.value)||1;updateBuilder();});
-    if(sppInp){sppInp.addEventListener('input',function(){row.sppOverride=parseInt(this.value)||null;updateBuilder();});}
+    packInp.addEventListener('change',function(){row.packs=parseInt(this.value)||1;updateBuilder();});
+    if(sppInp&&sppInp.tagName==='INPUT'){
+      sppInp.addEventListener('input',function(){row.sppOverride=parseInt(this.value)||null;updateBuilder();});
+      sppInp.addEventListener('change',function(){row.sppOverride=parseInt(this.value)||null;updateBuilder();});
+    }
   });
 }
 
