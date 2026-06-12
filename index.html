@@ -380,7 +380,7 @@ input.pq-transport-input{width:70px;font-family:var(--mono);font-size:12px;}
                 <th style="white-space:nowrap;">Sheets/<br>pack</th>
                 <th style="white-space:nowrap;">Landed<br>cost/sheet</th>
                 <th style="white-space:nowrap;">Margin<br>%</th>
-                <th style="white-space:nowrap;">Transport<br>£/sheet</th>
+                <th style="white-space:nowrap;">Delivery<br>£ total</th>
                 <th style="white-space:nowrap;">Sell price<br>/sheet</th>
                 <th style="white-space:nowrap;">Total<br>sheets</th>
                 <th style="white-space:nowrap;">Profit<br>£</th>
@@ -1194,8 +1194,8 @@ function calcPQRow(row,rate){
   if(!landed) return null;
   var totalSheets=res?res.sheets:(row.packs*(row.spp||1));
   var margin=row.margin/100;
-  var transport=row.transport||0;
-  var costBase=landed+transport;
+  var transportPerSheet=totalSheets>0?(row.transport||0)/totalSheets:0;
+  var costBase=landed+transportPerSheet;
   var sell=costBase/(1-margin);
   var profitPerSheet=sell-costBase;
   var totalProfit=profitPerSheet*totalSheets;
@@ -1210,7 +1210,8 @@ function renderPricingTable(){
   // Save current values before re-render
   pqRows.forEach(function(row){
     var li=document.getElementById('pql'+row.id);
-    if(li&&li.tagName==='INPUT'){var v=parseFloat(li.value);if(!isNaN(v))row.landedOverride=v;}
+    if(li&&li.tagName==='INPUT'&&li.dataset.manual==='true'){var v=parseFloat(li.value);if(!isNaN(v))row.landedOverride=v;}
+    else if(li&&li.dataset.manual!=='true'){row.landedOverride=null;}
     var mi=document.getElementById('pqm'+row.id);
     if(mi){var v=parseFloat(mi.value);if(!isNaN(v))row.margin=v;}
     var ti=document.getElementById('pqt'+row.id);
@@ -1252,8 +1253,9 @@ function renderPricingTable(){
     if(li){
       li.addEventListener('input',function(){
         var v=parseFloat(this.value);
+        this.dataset.manual='true';
         row.landedOverride=isNaN(v)?null:v;
-        this.className='builder-table input pq-landed-input'+(row.landedOverride!=null?' overridden':'');
+        this.style.borderColor=row.landedOverride!=null?'var(--amber)':'var(--border2)';
         recalc();
       });
     }
@@ -1293,9 +1295,9 @@ function renderPQRow(row){
     +'<td><select class="sel-thk" id="pqthk'+row.id+'">'+thkOpts+'</select></td>'
     +'<td><input class="inp-packs" type="number" id="pqp'+row.id+'" value="'+row.packs+'" min="1" style="width:60px;"></td>'
     +'<td><input class="inp-packs" type="number" id="pqs'+row.id+'" value="'+(row.spp||sppDefault)+'" min="1" style="width:60px;"></td>'
-    +'<td><input type="number" id="pql'+row.id+'" class="pq-landed-input'+(isOverride?' overridden':'')+'" value="'+landedVal+'" step="0.01" placeholder="auto" style="width:90px;padding:6px 8px;font-size:12px;font-family:var(--mono);border:1.5px solid '+(isOverride?'var(--amber)':'var(--border2)')+';border-radius:5px;background:var(--surface);color:var(--text);outline:none;" title="Auto-filled from Latvia landed cost. Edit to override."></td>'
+    +'<td><input type="number" id="pql'+row.id+'" class="pq-landed-input'+(isOverride?' overridden':'')+'" value="'+landedVal+'" step="0.01" placeholder="auto" style="width:90px;padding:6px 8px;font-size:12px;font-family:var(--mono);border:1.5px solid var(--border2);border-radius:5px;background:var(--surface);color:var(--text);outline:none;" title="Auto-filled from Latvia landed cost. Edit to override."></td>'
     +'<td><input class="pq-margin-input inp-packs" type="number" id="pqm'+row.id+'" value="'+row.margin+'" min="0" max="100" step="0.5" style="width:65px;text-align:center;"></td>'
-    +'<td><input class="pq-transport-input inp-packs" type="number" id="pqt'+row.id+'" value="'+(row.transport||0)+'" min="0" step="0.01" style="width:70px;font-family:var(--mono);font-size:12px;"></td>'
+    +'<td><input class="pq-transport-input inp-packs" placeholder="0.00" type="number" id="pqt'+row.id+'" value="'+(row.transport||0)+'" min="0" step="0.01" style="width:70px;font-family:var(--mono);font-size:12px;"></td>'
     +'<td class="pq-sell" id="pqsell'+row.id+'">'+sellStr+'</td>'
     +'<td class="cell-spp" id="pqsheets'+row.id+'">'+(calc?calc.totalSheets:'—')+'</td>'
     +'<td class="'+profitClass+'" id="pqprofit'+row.id+'">'+totalProfitStr+'</td>'
