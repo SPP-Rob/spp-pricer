@@ -565,6 +565,10 @@ var SIZE_LABELS={
 var CF=6.5,RPP=7,SC=4.43;
 var curSize='sm',curFam='Birch',curSupBuilder='est';
 
+function getMaxiSpp(thk,sz){
+  var m2=gM2(sz)||gM2('maxi_1250_3340');
+  return Math.max(1,Math.round(1/((thk/1000)*m2)));
+}
 function G(v){return '\xA3'+v.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function E(v){return '\u20AC'+v.toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function gM2(sz){return SHEET_AREAS[sz]||SHEET_AREAS.sm;}
@@ -629,7 +633,7 @@ function calcRow(sup,fk,gk,sz,thk,packs,rate,sppLg){
       else if(mel||lac){spp=LAT_PACKS_SM[thk]||null;}
       else{spp=packSM('lat',gc,thk);}
     } else if(sz==='lg'){spp=sppLg||15;}
-    else {spp=15;} // maxi/tex4k — user adjustable
+    else {spp=row&&row.sppOverride?row.sppOverride:getMaxiSpp(thk,sz);} // maxi/tex4k — ~1m³ per pack
     if(!spp) return null;
   } else if(sup==='skl'){
     var pm3_eur=getPpm3SKL(gc,thk);
@@ -764,17 +768,25 @@ function updateCompare(){
   var sz=curSize;
 
   var eR=calcRow('est',fk,gk,sz,thk,pe,rate,sppLgE);
-  var lR=calcRow('lat',fk,gk,sz,thk,pl,rate,sppLgL);
+  var sppLgLAT=(sz.indexOf('maxi')===0||isTex4k(sz))?getMaxiSpp(thk,sz):sppLgL;
+  var lR=calcRow('lat',fk,gk,sz,thk,pl,rate,sppLgLAT);
   var sR=calcRow('skl',fk,gk,sz,thk,ps,rate,null);
 
   var av=[{r:eR,n:pe,lbl:'ESTply',tag:'est'},{r:lR,n:pl,lbl:'Latvijas Finieris',tag:'lat'},{r:sR,n:ps,lbl:'Sklejka Multi',tag:'skl'}].filter(function(x){return x.r!==null;});
   var wp=av.length?Math.min.apply(null,av.map(function(x){return x.r.psl;})):null;
 
-  var html=[{r:eR,n:pe,lbl:'ESTply',tag:'est'},{r:lR,n:pl,lbl:'Latvijas Finieris',tag:'lat'},{r:sR,n:ps,lbl:'Sklejka Multi',tag:'skl'}].map(function(x){
-    var win=x.r&&av.length>1&&Math.abs(x.r.psl-wp)<0.005;
-    return renderCCard(x.r,x.n,x.lbl,x.tag,win);
+  var famKey=document.getElementById('c-family').value;
+  var latOnly=(famKey==='Maxi Panels');
+  var cardSuppliers=latOnly
+    ?[{r:lR,n:pl,lbl:'Latvijas Finieris',tag:'lat'}]
+    :[{r:eR,n:pe,lbl:'ESTply',tag:'est'},{r:lR,n:pl,lbl:'Latvijas Finieris',tag:'lat'},{r:sR,n:ps,lbl:'Sklejka Multi',tag:'skl'}];
+  var rg=document.getElementById('c-results');
+  rg.style.cssText=latOnly?'grid-template-columns:1fr;max-width:480px;':'';
+  var html=cardSuppliers.map(function(x){
+    var w=x.r&&av.length>1&&Math.abs(x.r.psl-wp)<0.005;
+    return renderCCard(x.r,x.n,x.lbl,x.tag,w);
   }).join('');
-  document.getElementById('c-results').innerHTML=html;
+  rg.innerHTML=html;
 
   var vd=document.getElementById('c-verdict');
   var staleNote=lR&&lR.maxi_stale?'<span class="stale-badge">Maxi prices Q3 2023 — indicative only</span>':'';
@@ -850,7 +862,8 @@ function addRow(){
   var gkeys=Object.keys(FAM_CONFIG[fk].grades);
   var gk=gkeys[0];
   var sz=FAM_CONFIG[fk].sizes[0];
-  var thk=FAM_CONFIG[fk].thk[0];
+  var thkArr=FAM_CONFIG[fk].thk;
+  var thk=thkArr.indexOf(18)>=0?18:thkArr[0];
   bRows.push({id:id,fk:fk,gk:gk,sz:sz,thk:thk,packs:1,sppOverride:null});
   renderBuilderTable();
   updateBuilder();
@@ -1035,7 +1048,7 @@ function printLoad(){
       var band=row.sz==='lg'?'lg':'sm';
       var ek=gc?gc.ek:null;
       var pm2=ek?(EST[band][ek]||{})[row.thk]:null;
-      if(pm2) pm3Str='€'+Math.round(pm2/((row.thk/1000)*gM2(row.sz)))+'/m³';
+      if(pm2) pm3Str='€'+Math.round(pm2/(row.thk/1000))+'/m³';
     } else if(curSupBuilder==='lat'){
       var pm3=getPpm3LAT(row.fk,row.gk,row.thk,row.sz);
       if(pm3) pm3Str='£'+pm3+'/m³';
