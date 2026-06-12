@@ -382,7 +382,7 @@ input.pq-transport-input{width:70px;font-family:var(--mono);font-size:12px;}
                 <th style="white-space:nowrap;">Margin<br>%</th>
                 <th style="white-space:nowrap;">Delivery<br>£ total</th>
                 <th style="white-space:nowrap;">Sell price<br>/sheet</th><th style="white-space:nowrap;">Eff.<br>margin %</th>
-                <th style="white-space:nowrap;">Total<br>sheets</th>
+                <th style="white-space:nowrap;">Profit<br>/sheet</th>
                 <th style="white-space:nowrap;">Profit<br>£</th>
                 <th></th>
               </tr>
@@ -1338,7 +1338,7 @@ function renderPQRow(row){
     +'<td><select class="sel-grade" id="pqgrade'+row.id+'">'+gradeOpts+'</select></td>'
     +'<td><select class="sel-size" id="pqsz'+row.id+'" style="width:120px;">'+szOpts+'</select></td>'
     +'<td><select class="sel-thk" id="pqthk'+row.id+'">'+thkOpts+'</select></td>'
-    +'<td><input class="inp-packs" type="number" id="pqp'+row.id+'" value="'+row.packs+'" min="1" style="width:60px;"></td>'
+    +'<td><input class="inp-packs" type="number" id="pqp'+row.id+'" value="'+row.packs+'" min="1" style="width:60px;"><div style="font-size:10px;color:var(--text3);margin-top:2px;">'+(calc?calc.totalSheets+' sheets':'')+'</div></td>'
     +'<td><input class="inp-packs" type="number" id="pqs'+row.id+'" value="'+(row.spp||sppDefault)+'" min="1" style="width:60px;"></td>'
     +'<td><input type="number" id="pql'+row.id+'" class="pq-landed-input'+(isOverride?' overridden':'')+'" value="'+landedVal+'" step="0.01" placeholder="auto" style="width:90px;padding:6px 8px;font-size:12px;font-family:var(--mono);border:1.5px solid var(--border2);border-radius:5px;background:var(--surface);color:var(--text);outline:none;" title="Auto-filled from Latvia landed cost. Edit to override."></td>'
     +'<td><input class="pq-margin-input inp-packs" type="number" id="pqm'+row.id+'" value="'+row.margin+'" min="0" max="100" step="0.5" style="width:65px;text-align:center;"></td>'
@@ -1349,7 +1349,7 @@ function renderPQRow(row){
       +' title="Enter sell price to back-calculate margin, or adjust margin above" placeholder="auto">'
       +'</td>'
       +'<td class="cell-m3" id="pqeffm'+row.id+'">'+(calc?calc.effectiveMargin.toFixed(1)+'%':'—')+'</td>'
-    +'<td class="cell-spp" id="pqsheets'+row.id+'">'+(calc?calc.totalSheets:'—')+'</td>'
+    +'<td class="pq-profit" id="pqpslprofit'+row.id+'">'+(calc?G(calc.profitPerSheet):'—')+'</td>'
     +'<td class="'+profitClass+'" id="pqprofit'+row.id+'">'+totalProfitStr+'</td>'
     +'<td><button class="btn-remove" onclick="removePricingRow('+row.id+')">&#10005;</button></td>'
     +'</tr>';
@@ -1361,14 +1361,17 @@ function updatePricing(){
   pqRows.forEach(function(row){
     var calc=calcPQRow(row,rate);
     var _unused=null; // sell now uses pqsell2_ input
-    var sheetsEl=document.getElementById('pqsheets'+row.id);
     var profitEl=document.getElementById('pqprofit'+row.id);
     if(calc){
       var sellInp=document.getElementById('pqsell2_'+row.id);
       if(sellInp&&sellInp.dataset.manual!=='true') sellInp.value=calc.sell.toFixed(2);
       var effmEl=document.getElementById('pqeffm'+row.id);
       if(effmEl) effmEl.textContent=calc.effectiveMargin.toFixed(1)+'%';
-      if(sheetsEl) sheetsEl.textContent=calc.totalSheets;
+      var pslProfitEl=document.getElementById('pqpslprofit'+row.id);
+      if(pslProfitEl){
+        pslProfitEl.textContent=G(calc.profitPerSheet);
+        pslProfitEl.className=calc.profitPerSheet<0?'pq-profit loss':'pq-profit';
+      }
       if(profitEl){
         profitEl.textContent=G(calc.totalProfit);
         profitEl.className=calc.totalProfit<0?'pq-profit loss':'pq-profit';
